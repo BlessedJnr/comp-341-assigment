@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Productivity App</string>
+    <string name="fab_content_desc">Add Project</string>
 </resources>
