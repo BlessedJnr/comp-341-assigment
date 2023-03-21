@@ -43,6 +43,7 @@ public class ProjectActivity extends AppCompatActivity {
     private void createProjectCardList() {
         projectItems = new ArrayList<>();
         projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img,"Work"));
+
     }
     
     private void buildRecyclerView() {

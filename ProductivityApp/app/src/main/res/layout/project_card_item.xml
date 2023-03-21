@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Project.ProjectActivity">
+    tools:context=".Project.ProjectActivity"
+    android:padding="10dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="160dp"
         android:layout_height="180dp"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="15dp"
         app:cardElevation="6dp"
         android:layout_margin="4dp"
         app:layout_constraintStart_toStartOf="parent"
