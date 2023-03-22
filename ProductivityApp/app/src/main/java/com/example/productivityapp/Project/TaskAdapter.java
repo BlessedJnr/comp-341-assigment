@@ -67,7 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     }
 
-    public class MyTasks {
+    public static class MyTasks {
         private String taskName = "";
         private String taskDueDate = "";
 
