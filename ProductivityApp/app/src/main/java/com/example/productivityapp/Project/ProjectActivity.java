@@ -3,7 +3,6 @@ package com.example.productivityapp.Project;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,13 +11,12 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.os.Handler;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +57,18 @@ public class ProjectActivity extends AppCompatActivity {
                         projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, text));
                         mAdapter.notifyItemInserted(projectItems.size() - 1);
                         inputEditText.setText("");
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        hideKeyboard();
+                        // Add a delay of 100ms before hiding the bottom sheet
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                            }
+                        }, 100);
                     }
+
+
+
                     return true;
                 }
                 return false;
@@ -77,5 +85,13 @@ public class ProjectActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
         mAdapter = new ProjectAdapterClass(projectItems);
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void hideKeyboard (){
+        View view = this.getCurrentFocus();
+        if (view != null){
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
