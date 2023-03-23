@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.productivityapp.Project.ProjectActivity;
+import com.example.productivityapp.Project.TaskActivity;
 
 public class MainActivity extends AppCompatActivity {
 

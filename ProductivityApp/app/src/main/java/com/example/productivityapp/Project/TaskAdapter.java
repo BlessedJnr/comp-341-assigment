@@ -74,24 +74,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public MyTasks () {
 
         }
-
         public MyTasks (String name, String due){
             this.taskName = name;
             this.taskDueDate = due;
         }
-
         public String getTaskName() {
             return taskName;
         }
-
         public void setTaskName(String taskName) {
             this.taskName = taskName;
         }
-
         public String getTaskDueDate() {
             return taskDueDate;
         }
-
         public void setTaskDueDate(String taskDueDate) {
             this.taskDueDate = taskDueDate;
         }

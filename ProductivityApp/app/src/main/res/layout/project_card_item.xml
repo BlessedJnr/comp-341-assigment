@@ -8,7 +8,7 @@
     android:padding="10dp">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
+        android:id="@+id/project_card"
         android:layout_width="160dp"
         android:layout_height="180dp"
         app:cardCornerRadius="15dp"

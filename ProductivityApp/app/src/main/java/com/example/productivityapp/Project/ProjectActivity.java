@@ -4,17 +4,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.os.Handler;
+
+import com.example.productivityapp.MainActivity;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
+import com.example.productivityapp.databinding.ProjectCardItemBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.ArrayList;
@@ -26,20 +32,36 @@ public class ProjectActivity extends AppCompatActivity {
     private ProjectAdapterClass mAdapter;
     private List<ProjectAdapterClass.ProjectItem> projectItems;
     private ActivityProjectBinding binding;
+    private ProjectCardItemBinding cardBinding;
     private FloatingActionButton addProject;
     private TextInputEditText inputEditText;
+    private MaterialCardView projectCard;
+    private TextView projectTitle;
+    private ImageView projectImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
+        //binding for task activity
+        cardBinding = ProjectCardItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         createProjectCardList();
         buildRecyclerView();
+
+        //bind items
         addProject = binding.floatingActionButton;
         inputEditText = binding.textInputEditText;
+        projectCard = cardBinding.projectCard;
+        projectImage = cardBinding.projectCardImage;
+        projectTitle = cardBinding.projectCardTitle;
 
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.projectStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+
+        //display bottom sheet to add project
         addProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,6 +69,33 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
 
+        //add on click listener to the card
+        projectCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //set a click listener on the ImageView and TextView
+        projectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        projectTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //saves project on action send click in input field
         inputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -74,6 +123,8 @@ public class ProjectActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
     private void createProjectCardList() {
         projectItems = new ArrayList<>();
