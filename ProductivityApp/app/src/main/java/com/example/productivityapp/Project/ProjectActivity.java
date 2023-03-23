@@ -12,10 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.os.Handler;
-
-import com.example.productivityapp.MainActivity;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.example.productivityapp.databinding.ProjectCardItemBinding;
@@ -28,7 +25,6 @@ import java.util.List;
 
 public class ProjectActivity extends AppCompatActivity {
 
-    private RecyclerView mRecyclerView;
     private ProjectAdapterClass mAdapter;
     private List<ProjectAdapterClass.ProjectItem> projectItems;
     private ActivityProjectBinding binding;
@@ -131,7 +127,7 @@ public class ProjectActivity extends AppCompatActivity {
     }
     
     private void buildRecyclerView() {
-        mRecyclerView = binding.recyclerView;
+        RecyclerView mRecyclerView = binding.recyclerView;
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
         mAdapter = new ProjectAdapterClass(projectItems);
