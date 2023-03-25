@@ -38,9 +38,15 @@ public class ProjectActivity extends AppCompatActivity {
     private ProjectCardItemBinding cardBinding;
     private FloatingActionButton addProject;
     private TextInputEditText inputEditText;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("Users");
+
         super.onCreate(savedInstanceState);
 
         //binding for project activity
@@ -121,8 +127,6 @@ public class ProjectActivity extends AppCompatActivity {
     }
 
     private void addToDatabase (CreateProject project){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("Users");
 
         //get the currently logged in user name
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -131,6 +135,10 @@ public class ProjectActivity extends AppCompatActivity {
         String uid = user.getUid();
 
         //push new project object
-        usersRef.child(uid).setValue(project);
+        DatabaseReference currentUserProjectRef = usersRef.child(uid).child("projects");
+        DatabaseReference newProjectRef = currentUserProjectRef.push();
+        newProjectRef.setValue(project);
     }
+
+    
 }
