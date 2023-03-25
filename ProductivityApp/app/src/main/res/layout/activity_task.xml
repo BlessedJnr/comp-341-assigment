@@ -16,7 +16,7 @@
             android:id="@+id/project_name_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Project Name"
+            android:text="@string/project_name"
             android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_marginTop="30dp"
@@ -39,13 +39,11 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 >
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/task_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
-
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -53,11 +51,53 @@
     <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_task"
+        style="?attr/floatingActionButtonLargeStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@android:drawable/ic_input_add"
-        style="?attr/floatingActionButtonLargeStyle"/>
+        tools:ignore="ImageContrastCheck" />
+
+    <FrameLayout
+        android:id="@+id/task_standard_btm_sheet"
+        style="@style/Widget.Material3.BottomSheet.Modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <!-- Drag handle for accessibility -->
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/task_drag_handle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!--Bottom sheet contents -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/task_filled_textfield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/task_name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/task_input_edit_text"
+                    style="?attr/textInputFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:textColorHint="#757575" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </FrameLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

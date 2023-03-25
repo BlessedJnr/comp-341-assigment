@@ -33,9 +33,6 @@ public class ProjectActivity extends AppCompatActivity {
     private ProjectCardItemBinding cardBinding;
     private FloatingActionButton addProject;
     private TextInputEditText inputEditText;
-    private MaterialCardView projectCard;
-    private TextView projectTitle;
-    private ImageView projectImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +40,6 @@ public class ProjectActivity extends AppCompatActivity {
 
         //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
-
-        //binding for project cards
-        cardBinding = ProjectCardItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         createProjectCardList();
@@ -54,9 +48,6 @@ public class ProjectActivity extends AppCompatActivity {
         //bind items
         addProject = binding.floatingActionButton;
         inputEditText = binding.textInputEditText;
-        projectCard = cardBinding.projectCard;
-        projectImage = cardBinding.projectCardImage;
-        projectTitle = cardBinding.projectCardTitle;
 
         //create bottom sheet ans
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.projectStandardBtmSheet);
@@ -66,8 +57,6 @@ public class ProjectActivity extends AppCompatActivity {
         addProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Project Card", Toast.LENGTH_SHORT);
-                toast.show();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });

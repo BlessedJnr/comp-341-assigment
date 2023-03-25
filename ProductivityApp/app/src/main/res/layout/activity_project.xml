@@ -72,14 +72,15 @@
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/project_drag_handle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
 
         <!--Bottom sheet contents -->
         <com.google.android.material.textfield.TextInputLayout
-            style="?attr/textInputFilledStyle"
             android:id="@+id/project_filled_textfield"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="?attr/textInputFilledStyle"
             android:hint="Project Name">
 
             <com.google.android.material.textfield.TextInputEditText
