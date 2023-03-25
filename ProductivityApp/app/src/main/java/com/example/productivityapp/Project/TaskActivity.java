@@ -40,7 +40,6 @@ public class TaskActivity extends AppCompatActivity {
 
         //create the tasks list
         List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
-        taskItems.add(new TaskAdapter.MyTasks("Create other tasks","18 Mar"));
         buildRecyclerView(taskItems);
 
         //create a bottomsheet and make it hidden
