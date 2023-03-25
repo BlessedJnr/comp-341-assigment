@@ -27,6 +27,12 @@
         <activity android:name=".Project.ProjectActivity" />
         <activity
             android:name=".MoreActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".RetrieveData"
+            android:exported="false" />
+        <activity
+            android:name=".AddingMembers"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
