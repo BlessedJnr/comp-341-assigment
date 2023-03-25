@@ -19,8 +19,6 @@
         <activity
             android:name=".MoreActivity"
             android:exported="false" />
-        <activity android:name=".Project.ProjectActivity"
-            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
