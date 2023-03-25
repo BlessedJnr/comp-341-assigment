@@ -1,77 +1,72 @@
 package com.example.productivityapp.Project;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.os.Handler;
-import android.widget.Toast;
 
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
-import com.example.productivityapp.databinding.ProjectCardItemBinding;
+import com.example.productivityapp.databinding.ActivityTaskBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectActivity extends AppCompatActivity {
+public class TaskActivity extends AppCompatActivity {
 
-    private ProjectAdapterClass mAdapter;
-    private List<ProjectAdapterClass.ProjectItem> projectItems;
-    private ActivityProjectBinding binding;
-    private ProjectCardItemBinding cardBinding;
-    private FloatingActionButton addProject;
-    private TextInputEditText inputEditText;
+    private ActivityTaskBinding binding;
+    private TaskAdapter adapter;
+    private RecyclerView taskRecyclerView;
 
+    private FloatingActionButton addTask;
+
+    private TextInputEditText taskTxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //binding for project activity
-        binding = ActivityProjectBinding.inflate(getLayoutInflater());
+        binding = ActivityTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        createProjectCardList();
-        buildRecyclerView();
+        //create the tasks list
+        List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+        buildRecyclerView(taskItems);
 
-        //bind items
-        addProject = binding.floatingActionButton;
-        inputEditText = binding.textInputEditText;
-
-        //create bottom sheet ans
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.projectStandardBtmSheet);
+        //create a bottomsheet and make it hidden
+        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.taskStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        //display bottom sheet to add project
-        addProject.setOnClickListener(new View.OnClickListener() {
+        //bind views
+        addTask = binding.addTask;
+        taskTxt = binding.taskInputEditText;
+
+        addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
 
-        //saves project on action send click in input field
-        inputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        taskTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND){
-                    String text = inputEditText.getText().toString();
+                    String text = taskTxt.getText().toString();
 
                     if (!text.isEmpty()) {
-                        projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, text));
-                        mAdapter.notifyItemInserted(projectItems.size() - 1);
-                        inputEditText.setText("");
+                        taskItems.add(new TaskAdapter.MyTasks(text, "------"));
+                        adapter.notifyItemInserted(taskItems.size() - 1);
+                        taskTxt.setText("");
                         hideKeyboard();
                         // Add a delay of 100ms before hiding the bottom sheet
                         new Handler().postDelayed(new Runnable() {
@@ -88,17 +83,13 @@ public class ProjectActivity extends AppCompatActivity {
         });
 
 
+
     }
-    private void createProjectCardList() {
-        projectItems = new ArrayList<>();
-    }
-    
-    private void buildRecyclerView() {
-        RecyclerView mRecyclerView = binding.recyclerView;
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
-        mAdapter = new ProjectAdapterClass(projectItems, ProjectActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
+    private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
+        taskRecyclerView = binding.taskRecyclerView;
+        taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new TaskAdapter(arr, 15);
+        taskRecyclerView.setAdapter(adapter);
     }
 
     private void hideKeyboard (){
