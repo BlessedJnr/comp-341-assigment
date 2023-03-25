@@ -1,14 +1,16 @@
 package com.example.productivityapp.Project;
 
+import java.util.ArrayList;
+
 public class CreateTasks {
     private String task;
     private String state = "pending";
     private String dueDate;
+    private ArrayList<String> collaborators;
 
-    public CreateTasks(String task, String state, String dueDate) {
+    public CreateTasks(String task, String state) {
         this.task = task;
         this.state = state;
-        this.dueDate = dueDate;
     }
 
     public String getTask() {
@@ -33,5 +35,13 @@ public class CreateTasks {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public ArrayList<String> getCollaborators() {
+        return collaborators;
+    }
+
+    public void setCollaborators(ArrayList<String> collaborators) {
+        this.collaborators = collaborators;
     }
 }
