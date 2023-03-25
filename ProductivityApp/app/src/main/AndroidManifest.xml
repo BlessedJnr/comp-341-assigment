@@ -19,6 +19,9 @@
             android:exported="false" />
         <activity
             android:name=".MoreActivity"
+
+            />
+        <activity
             android:name=".Project.ProjectActivity"
             android:exported="false" />
         <activity
