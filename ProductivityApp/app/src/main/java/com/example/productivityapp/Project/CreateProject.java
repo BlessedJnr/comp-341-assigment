@@ -7,8 +7,13 @@ public class CreateProject {
     private String projectName;
     private ArrayList<CreateTasks> tasksList;
 
+    public CreateProject(){
+        this.projectName="";
+        this.tasksList = new ArrayList<>();
+    }
     public CreateProject(String projectName) {
         this.projectName = projectName;
+        this.tasksList = new ArrayList<>();
     }
 
     public String getProjectName() {
