@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -101,6 +102,22 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
                 dialogPlus.show();
             }
         });
+           holder.Delete.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                  FirebaseDatabase.getInstance().getReference().child("TeamMembers")
+                          .child(getRef(holder.getAdapterPosition()).getKey())
+                          .removeValue()
+                          .addOnCompleteListener(new OnCompleteListener<Void>() {
+                              @Override
+                              public void onComplete(@NonNull Task<Void> task) {
+                                  Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                              }
+                          });
+               }
+           });
+
+
     }
 
 /*
@@ -177,7 +194,7 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
     public class PostViewholder extends RecyclerView.ViewHolder {
 
         TextView Fname,Email,Team,Project;
-        ImageView Edit;
+        ImageView Edit,Delete;
 
         public PostViewholder(@NonNull View itemView) {
             super(itemView);
@@ -188,6 +205,7 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
             Project=itemView.findViewById(R.id.project);
 
             Edit=itemView.findViewById(R.id.edit);
+            Delete=itemView.findViewById(R.id.delete);
         }
     }
 }
