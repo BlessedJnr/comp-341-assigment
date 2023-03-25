@@ -1,11 +1,15 @@
 package com.example.productivityapp.Project;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,10 +18,13 @@ import java.util.List;
 
 public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClass.ViewHolder> {
     private List <ProjectItem> mProjectItems;
+    Context context;
 
-    public ProjectAdapterClass (List<ProjectItem> projectItem) {
+    public ProjectAdapterClass (List<ProjectItem> projectItem, ProjectActivity activity) {
+        this.context = activity;
         mProjectItems = projectItem;
     }
+
 
     @NonNull
     @Override
@@ -49,6 +56,14 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
             layoutParams.rightMargin = margin;
         }
         holder.itemView.setLayoutParams(layoutParams);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, TaskActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

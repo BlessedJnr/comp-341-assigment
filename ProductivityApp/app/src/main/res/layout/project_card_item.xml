@@ -9,13 +9,14 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/project_card"
+        android:elevation="10dp"
+        app:cardBackgroundColor="#FFFFFF"
         android:layout_width="160dp"
         android:layout_height="180dp"
         app:cardCornerRadius="15dp"
         android:layout_margin="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:clickable="true"
         >
 
         <LinearLayout

@@ -18,7 +18,7 @@ public class TaskActivity extends AppCompatActivity {
 
     private ActivityTaskBinding binding;
     private RecyclerView taskRecyclerView;
-    private List<TaskAdapter.MyTasks> taskItems;
+
 
     private FloatingActionButton addTask;
     @Override
@@ -26,19 +26,18 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        onCreateTaskItem();
-        buildRecyclerView();
+
+        //create the tasks list
+        List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+        taskItems.add(new TaskAdapter.MyTasks("Create other tasks","18 Mar"));
+        taskItems.add(new TaskAdapter.MyTasks("Create other tasks","18 Mar"));
+        buildRecyclerView(taskItems);
 
     }
-    private void onCreateTaskItem () {
-        taskItems = new ArrayList<>();
-        taskItems.add(new TaskAdapter.MyTasks("Create other tasks","18 Mar"));
-        taskItems.add(new TaskAdapter.MyTasks("Create other tasks","18 Mar"));
-    }
-    private void buildRecyclerView (){
+    private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
         taskRecyclerView = binding.taskRecyclerView;
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TaskAdapter adapter = new TaskAdapter(taskItems, 15);
+        TaskAdapter adapter = new TaskAdapter(arr, 15);
         taskRecyclerView.setAdapter(adapter);
     }
 }

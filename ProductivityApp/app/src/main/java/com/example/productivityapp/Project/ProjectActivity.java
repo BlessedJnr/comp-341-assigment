@@ -13,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
+import android.widget.Toast;
+
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.example.productivityapp.databinding.ProjectCardItemBinding;
@@ -38,9 +40,11 @@ public class ProjectActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
-        //binding for task activity
+
+        //binding for project cards
         cardBinding = ProjectCardItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -54,6 +58,7 @@ public class ProjectActivity extends AppCompatActivity {
         projectImage = cardBinding.projectCardImage;
         projectTitle = cardBinding.projectCardTitle;
 
+        //create bottom sheet ans
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.projectStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
@@ -61,33 +66,9 @@ public class ProjectActivity extends AppCompatActivity {
         addProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Project Card", Toast.LENGTH_SHORT);
+                toast.show();
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
-
-        //add on click listener to the card
-        projectCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //set a click listener on the ImageView and TextView
-        projectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        projectTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProjectActivity.this, TaskActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -111,9 +92,6 @@ public class ProjectActivity extends AppCompatActivity {
                             }
                         }, 100);
                     }
-
-
-
                     return true;
                 }
                 return false;
@@ -130,7 +108,7 @@ public class ProjectActivity extends AppCompatActivity {
         RecyclerView mRecyclerView = binding.recyclerView;
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
-        mAdapter = new ProjectAdapterClass(projectItems);
+        mAdapter = new ProjectAdapterClass(projectItems, ProjectActivity.this);
         mRecyclerView.setAdapter(mAdapter);
     }
 
