@@ -19,6 +19,7 @@
             android:exported="false" />
         <activity
             android:name=".MoreActivity"
+            android:name=".Project.ProjectActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
