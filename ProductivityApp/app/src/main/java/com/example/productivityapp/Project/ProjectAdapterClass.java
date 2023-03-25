@@ -59,8 +59,9 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
+                String projectName = mProjectItems.get(position).getText();
                 Intent intent = new Intent(context, TaskActivity.class);
+                intent.putExtra("projectName", projectName);
                 context.startActivity(intent);
             }
         });
