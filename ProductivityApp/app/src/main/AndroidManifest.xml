@@ -12,6 +12,12 @@
         android:theme="@style/Theme.ProductivityApp"
         tools:targetApi="31">
         <activity
+            android:name=".RetrieveData"
+            android:exported="false" />
+        <activity
+            android:name=".AddingMembers"
+            android:exported="false" />
+        <activity
             android:name=".MoreActivity"
             android:exported="false" />
         <activity
