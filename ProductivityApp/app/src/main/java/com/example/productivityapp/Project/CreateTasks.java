@@ -8,9 +8,8 @@ public class CreateTasks {
     private String dueDate;
     private ArrayList<String> collaborators;
 
-    public CreateTasks(String task, String state) {
+    public CreateTasks(String task) {
         this.task = task;
-        this.state = state;
     }
 
     public String getTask() {

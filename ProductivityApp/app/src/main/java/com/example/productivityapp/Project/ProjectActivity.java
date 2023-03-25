@@ -22,6 +22,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +74,13 @@ public class ProjectActivity extends AppCompatActivity {
                     String text = inputEditText.getText().toString();
 
                     if (!text.isEmpty()) {
+
+                        //Create a new project
+                        CreateProject project = new CreateProject(text);
+                        addToDatabase(project);
+
                         projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, text));
+
                         mAdapter.notifyItemInserted(projectItems.size() - 1);
                         inputEditText.setText("");
                         hideKeyboard();
@@ -107,5 +118,19 @@ public class ProjectActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void addToDatabase (CreateProject project){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+
+        //get the currently logged in user name
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
+        String uid = user.getUid();
+
+        //push new project object
+        usersRef.child(uid).setValue(project);
     }
 }

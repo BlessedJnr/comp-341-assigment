@@ -7,9 +7,8 @@ public class CreateProject {
     private String projectName;
     private ArrayList<CreateTasks> tasksList;
 
-    public CreateProject(String projectName, ArrayList<CreateTasks> tasksList) {
+    public CreateProject(String projectName) {
         this.projectName = projectName;
-        this.tasksList = tasksList;
     }
 
     public String getProjectName() {
