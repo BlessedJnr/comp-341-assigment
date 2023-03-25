@@ -12,6 +12,7 @@
         android:theme="@style/Theme.ProductivityApp"
         tools:targetApi="31">
         <activity
+            android:name=".MoreActivity"
             android:name=".Project.ProjectActivity"
             android:exported="false" />
         <activity
