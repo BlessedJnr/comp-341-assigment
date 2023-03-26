@@ -1,5 +1,6 @@
 package com.example.productivityapp.Project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +23,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +42,25 @@ public class ProjectActivity extends AppCompatActivity {
     private ProjectCardItemBinding cardBinding;
     private FloatingActionButton addProject;
     private TextInputEditText inputEditText;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef;
+
+    //get the currently logged in user name
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    DatabaseReference currentUserProjectRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //firebase
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("Users");
+        currentUserProjectRef = usersRef.child(user.getUid()).child("projects");
+
         super.onCreate(savedInstanceState);
 
         //binding for project activity
@@ -44,6 +69,7 @@ public class ProjectActivity extends AppCompatActivity {
 
         createProjectCardList();
         buildRecyclerView();
+        retrieveProject();
 
         //bind items
         addProject = binding.floatingActionButton;
@@ -65,12 +91,17 @@ public class ProjectActivity extends AppCompatActivity {
         inputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND){
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
                     String text = inputEditText.getText().toString();
 
                     if (!text.isEmpty()) {
-                        projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, text));
-                        mAdapter.notifyItemInserted(projectItems.size() - 1);
+
+                        //Create a new project
+                        CreateProject project = new CreateProject(text);
+                        addToDatabase(project);
+
+                        retrieveProject();
+
                         inputEditText.setText("");
                         hideKeyboard();
                         // Add a delay of 100ms before hiding the bottom sheet
@@ -89,10 +120,11 @@ public class ProjectActivity extends AppCompatActivity {
 
 
     }
+
     private void createProjectCardList() {
         projectItems = new ArrayList<>();
     }
-    
+
     private void buildRecyclerView() {
         RecyclerView mRecyclerView = binding.recyclerView;
         mRecyclerView.setHasFixedSize(true);
@@ -101,11 +133,47 @@ public class ProjectActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void hideKeyboard (){
+    private void hideKeyboard() {
         View view = this.getCurrentFocus();
-        if (view != null){
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    private void addToDatabase(CreateProject project) {
+
+        String uid = user.getUid();
+        //push new project object
+        DatabaseReference newProjectRef = currentUserProjectRef.push();
+        newProjectRef.setValue(project);
+    }
+
+    private void retrieveProject() {
+        currentUserProjectRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear the list of project items
+                projectItems.clear();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get the project object from the snapshot
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+
+                    //add project to the list of project items
+                    projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, project.getProjectName()));
+
+                }
+
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+
 }

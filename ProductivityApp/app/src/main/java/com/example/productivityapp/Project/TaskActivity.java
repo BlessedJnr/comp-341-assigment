@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
@@ -30,7 +31,7 @@ public class TaskActivity extends AppCompatActivity {
     private RecyclerView taskRecyclerView;
 
     private FloatingActionButton addTask;
-
+    private TextView projectNameTxt;
     private TextInputEditText taskTxt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,8 @@ public class TaskActivity extends AppCompatActivity {
         binding = ActivityTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        projectNameTxt = binding.projectNameTitle;
+        projectNameTxt.setText(getIntent().getStringExtra("projectName"));
         //create the tasks list
         List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
         buildRecyclerView(taskItems);
@@ -49,6 +52,7 @@ public class TaskActivity extends AppCompatActivity {
         //bind views
         addTask = binding.addTask;
         taskTxt = binding.taskInputEditText;
+
 
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
