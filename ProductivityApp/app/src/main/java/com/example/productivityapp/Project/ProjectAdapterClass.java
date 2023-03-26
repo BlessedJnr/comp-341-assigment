@@ -59,12 +59,16 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String projectName = mProjectItems.get(position).getText();
-                Intent intent = new Intent(context, TaskActivity.class);
-                intent.putExtra("projectName", projectName);
-                context.startActivity(intent);
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    String projectName = mProjectItems.get(adapterPosition).getText();
+                    Intent intent = new Intent(context, TaskActivity.class);
+                    intent.putExtra("projectName", projectName);
+                    context.startActivity(intent);
+                }
             }
         });
+
     }
 
     @Override

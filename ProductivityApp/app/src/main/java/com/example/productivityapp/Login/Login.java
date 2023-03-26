@@ -59,13 +59,11 @@ public class Login extends AppCompatActivity {
         }
     }
 
-    private void startMain () {
-        Intent intent = new Intent(Login.this, MainActivity.class);
-        startActivity(intent);
-    }
+
 
     private void loginUser (){
 
+        Toast.makeText(getApplicationContext(),"Trying", Toast.LENGTH_SHORT).show();
         //get the email
         String emailTxt = emailInput.getText().toString();
         //get the password
@@ -87,6 +85,7 @@ public class Login extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
+                                Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 startMain();
                             }
@@ -97,6 +96,12 @@ public class Login extends AppCompatActivity {
                         }
                     });
         }
+
+
+    }
+    private void startMain () {
+        Intent intent = new Intent(Login.this, MainActivity.class);
+        startActivity(intent);
     }
 
 }

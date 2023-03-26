@@ -151,6 +151,7 @@ public class ProjectActivity extends AppCompatActivity {
 
     private void retrieveProject() {
         currentUserProjectRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //clear the list of project items
