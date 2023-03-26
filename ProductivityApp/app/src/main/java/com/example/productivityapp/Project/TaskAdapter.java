@@ -57,6 +57,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
         holder.itemView.setLayoutParams(layoutParams);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();;
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override

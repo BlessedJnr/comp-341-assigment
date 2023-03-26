@@ -20,6 +20,10 @@ import com.example.productivityapp.databinding.ActivityTaskBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +33,28 @@ public class TaskActivity extends AppCompatActivity {
     private ActivityTaskBinding binding;
     private TaskAdapter adapter;
     private RecyclerView taskRecyclerView;
-
     private FloatingActionButton addTask;
     private TextView projectNameTxt;
     private TextInputEditText taskTxt;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef;
+
+    //get the currently logged in user name
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    DatabaseReference currentUserProjectRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //firebase
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
+        usersRef = database.getReference("Users");
+        currentUserProjectRef = usersRef.child(user.getUid()).child("projects").child("Tasks");
+
+
         super.onCreate(savedInstanceState);
         binding = ActivityTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -102,5 +122,9 @@ public class TaskActivity extends AppCompatActivity {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    private void retrieveTasks (){
+
     }
 }

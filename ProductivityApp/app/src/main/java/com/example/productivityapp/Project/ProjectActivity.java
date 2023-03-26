@@ -59,7 +59,10 @@ public class ProjectActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("Users");
-        currentUserProjectRef = usersRef.child(user.getUid()).child("projects");
+        String email = user.getEmail();
+        String encodedEmail = email.replace(".", ",");
+        currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
+
 
         super.onCreate(savedInstanceState);
 
@@ -175,6 +178,8 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 
 }

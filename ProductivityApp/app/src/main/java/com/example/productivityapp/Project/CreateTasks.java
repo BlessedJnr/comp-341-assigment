@@ -9,7 +9,7 @@ public class CreateTasks {
     private ArrayList<String> collaborators;
 
     public CreateTasks () {
-        
+
     }
 
     public CreateTasks(String task) {
