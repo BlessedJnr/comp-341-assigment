@@ -1,5 +1,6 @@
 package com.example.productivityapp.Project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +23,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +51,17 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //get the project name
+        String projectName = getIntent().getStringExtra("projectName");
+
         //firebase
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("Users");
-        currentUserProjectRef = usersRef.child(user.getUid()).child("projects").child("Tasks");
+        String email = user.getEmail();
+        String encodedEmail = email.replace(".", ",");
+        currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
 
         super.onCreate(savedInstanceState);
@@ -60,7 +69,7 @@ public class TaskActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         projectNameTxt = binding.projectNameTitle;
-        projectNameTxt.setText(getIntent().getStringExtra("projectName"));
+        projectNameTxt.setText(projectName);
         //create the tasks list
         List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
         buildRecyclerView(taskItems);
@@ -88,8 +97,10 @@ public class TaskActivity extends AppCompatActivity {
                     String text = taskTxt.getText().toString();
 
                     if (!text.isEmpty()) {
-                        taskItems.add(new TaskAdapter.MyTasks(text, "------"));
-                        adapter.notifyItemInserted(taskItems.size() - 1);
+                        //create a new task
+                        CreateTasks tasks = new CreateTasks(text);
+                        addToDatabase(tasks,text,projectName);
+
                         taskTxt.setText("");
                         hideKeyboard();
                         // Add a delay of 100ms before hiding the bottom sheet
@@ -123,6 +134,42 @@ public class TaskActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    private void addToDatabase(CreateTasks tasks, String taskName, String projectName) {
+        //retrieve the CreateProject object from the database using the project name
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //check if the task already exists in the project's task list
+                    boolean taskExists = false;
+                    for (CreateTasks task : createProject.getTasksList()) {
+                        if (task.getTask().equals(taskName)) {
+                            taskExists = true;
+                            break;
+                        }
+                    }
+                    //add the new task to the tasksList of the CreateProject object if it doesn't already exist
+                    if (!taskExists) {
+                        createProject.getTasksList().add(new CreateTasks(taskName));
+
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT);
+            }
+        });
+    }
+
+
 
     private void retrieveTasks (){
 
