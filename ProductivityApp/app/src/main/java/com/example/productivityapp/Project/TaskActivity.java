@@ -74,6 +74,8 @@ public class TaskActivity extends AppCompatActivity {
         List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
         buildRecyclerView(taskItems);
 
+        retrieveTasks();
+
         //create a bottomsheet and make it hidden
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.taskStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -171,7 +173,35 @@ public class TaskActivity extends AppCompatActivity {
 
 
 
-    private void retrieveTasks (){
+    private void retrieveTasks() {
+        String projectName = getIntent().getStringExtra("projectName");
 
+        //retrieve the CreateProject object from the database using the project name
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+                    List<CreateTasks> tasksList = createProject.getTasksList();
+                    ArrayList<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+
+                    //loop through the tasksList and add each task to the taskItems list
+                    for (CreateTasks task : tasksList) {
+                        TaskAdapter.MyTasks taskItem = new TaskAdapter.MyTasks(task.getTask());
+                        taskItems.add(taskItem);
+                    }
+                    //set the taskItems list to the adapter and notify the adapter of the changes
+                    adapter.setTasksList(taskItems);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
+
 }

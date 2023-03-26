@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.productivityapp.R;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -27,6 +28,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         mMargin = margin;
 
     }
+
+    public void setTasksList(ArrayList<MyTasks> tasklist) {
+        mTaskList = tasklist;
+    }
+
 
     @NonNull
     @Override
@@ -92,6 +98,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public MyTasks () {
 
         }
+
+        public MyTasks(String name){
+            this.taskName = name;
+            taskDueDate = "";
+        }
+
         public MyTasks (String name, String due){
             this.taskName = name;
             this.taskDueDate = due;
