@@ -62,8 +62,7 @@ public class Login extends AppCompatActivity {
 
 
     private void loginUser (){
-
-        Toast.makeText(getApplicationContext(),"Trying", Toast.LENGTH_SHORT).show();
+        
         //get the email
         String emailTxt = emailInput.getText().toString();
         //get the password
