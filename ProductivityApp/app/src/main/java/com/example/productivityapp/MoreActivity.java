@@ -17,10 +17,22 @@ public class MoreActivity extends AppCompatActivity {
     private Button teamsBtn;
 
     private  Button logoutbtn;
+
+    private  Button profilebtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more);
+
+
+        profilebtn=(Button)findViewById(R.id.accountbtn);
+        profilebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MoreActivity.this,Profile.class));
+
+            }
+        });
 
         backbutton = (Button) findViewById(R.id.backbtn);
         backbutton.setOnClickListener(new View.OnClickListener() {
