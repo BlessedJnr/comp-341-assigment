@@ -8,6 +8,10 @@ public class CreateTasks {
     private String dueDate;
     private ArrayList<String> collaborators;
 
+    public CreateTasks () {
+        
+    }
+
     public CreateTasks(String task) {
         this.task = task;
     }
