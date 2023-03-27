@@ -47,7 +47,7 @@ public class MoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MoreActivity.this,RetrieveData.class));
+                startActivity(new Intent(MoreActivity.this,ManageTeams.class));
             }
         });
         logoutbtn=findViewById(R.id.logoutbtn);
