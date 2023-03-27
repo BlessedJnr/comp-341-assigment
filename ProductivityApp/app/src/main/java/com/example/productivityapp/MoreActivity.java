@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 
 
 public class MoreActivity extends AppCompatActivity {
-    private Button backbutton;
+
     private Button teamsBtn;
 
     private  Button logoutbtn;
@@ -34,14 +34,7 @@ public class MoreActivity extends AppCompatActivity {
             }
         });
 
-        backbutton = (Button) findViewById(R.id.backbtn);
-        backbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MoreActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+
         teamsBtn = (Button) findViewById(R.id.teamsbtn);
         teamsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
