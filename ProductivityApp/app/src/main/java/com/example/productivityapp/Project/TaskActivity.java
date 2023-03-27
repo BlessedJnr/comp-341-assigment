@@ -47,6 +47,8 @@ public class TaskActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     DatabaseReference currentUserProjectRef;
+    //create the tasks list
+    List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +72,7 @@ public class TaskActivity extends AppCompatActivity {
 
         projectNameTxt = binding.projectNameTitle;
         projectNameTxt.setText(projectName);
-        //create the tasks list
-        List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+
         buildRecyclerView(taskItems);
 
         retrieveTasks();
@@ -174,6 +175,7 @@ public class TaskActivity extends AppCompatActivity {
 
 
     private void retrieveTasks() {
+        taskItems.clear();
         String projectName = getIntent().getStringExtra("projectName");
 
         //retrieve the CreateProject object from the database using the project name
