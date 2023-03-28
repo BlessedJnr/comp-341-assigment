@@ -69,8 +69,7 @@ public class IndividualTask extends AppCompatActivity {
         dueDateTxt = binding.displaydate;
         descInputTxt = binding.descinput;
 
-
-
+        retrieveFromDatabase();
 
         String[] states = getResources().getStringArray(R.array.states);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
@@ -94,7 +93,36 @@ public class IndividualTask extends AppCompatActivity {
     }
 
     private void retrieveFromDatabase (){
-        
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //get index of the task
+                    int index = -1;
+
+                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1){
+                        dueDateTxt.setText(createProject.getTasksList().get(index).getDueDate());
+                        descInputTxt.setText(createProject.getTasksList().get(index).getDescription());
+                        binding.taskState.setHint(createProject.getTasksList().get(index).getState());
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void saveToDatabase(String task, String desc, String date, String state) {
@@ -107,7 +135,6 @@ public class IndividualTask extends AppCompatActivity {
                     //get index of the task
                     int index = -1;
 
-                    //Toast.makeText(getApplicationContext(), taskName + " i = " + index, Toast.LENGTH_SHORT).show();
                     for (int i = 0; i < createProject.getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
                             Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
