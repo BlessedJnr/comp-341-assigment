@@ -126,7 +126,7 @@ public class TaskActivity extends AppCompatActivity {
     private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
         taskRecyclerView = binding.taskRecyclerView;
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TaskAdapter(arr, 15);
+        adapter = new TaskAdapter(arr, 15, TaskActivity.this);
         taskRecyclerView.setAdapter(adapter);
     }
 
