@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class CreateTasks {
     private String task;
-    private String state = "pending";
-    private String dueDate;
-    private ArrayList<String> collaborators;
+    private String description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+    private String state = "Pending";
+    private String dueDate = "01 Jan 2022";
 
     public CreateTasks () {
 
@@ -22,6 +22,14 @@ public class CreateTasks {
 
     public void setTask(String task) {
         this.task = task;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getState() {
@@ -40,11 +48,4 @@ public class CreateTasks {
         this.dueDate = dueDate;
     }
 
-    public ArrayList<String> getCollaborators() {
-        return collaborators;
-    }
-
-    public void setCollaborators(ArrayList<String> collaborators) {
-        this.collaborators = collaborators;
-    }
 }

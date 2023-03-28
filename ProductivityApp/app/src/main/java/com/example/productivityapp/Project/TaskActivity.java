@@ -139,7 +139,6 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void addToDatabase(CreateTasks tasks, String taskName, String projectName) {
-        //retrieve the CreateProject object from the database using the project name
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
