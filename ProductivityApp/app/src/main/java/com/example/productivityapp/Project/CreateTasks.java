@@ -19,6 +19,14 @@ public class CreateTasks {
         this.project = project;
     }
 
+    public CreateTasks(String mProject, String mTask, String desc, String dateDue, String mState){
+        this.project = mProject;
+        this.task = mTask;
+        this.description = desc;
+        this.dueDate = dateDue;
+        this.state = mState;
+    }
+
     public String getProject() {
         return project;
     }

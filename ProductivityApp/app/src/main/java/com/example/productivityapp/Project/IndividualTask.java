@@ -1,19 +1,26 @@
 package com.example.productivityapp.Project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityIndividualTaskBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class IndividualTask extends AppCompatActivity {
 
@@ -21,7 +28,7 @@ public class IndividualTask extends AppCompatActivity {
     ActivityIndividualTaskBinding binding;
     private String taskName;
     private String projectName;
-    private TextView projectNameTxt;
+    private TextView projectNameTxt, dueDateTxt, descInputTxt;
     private TextInputEditText taskNameTxt;
     private FirebaseDatabase database;
     private DatabaseReference usersRef;
@@ -29,6 +36,7 @@ public class IndividualTask extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
     DatabaseReference currentUserProjectRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,16 +56,89 @@ public class IndividualTask extends AppCompatActivity {
         taskName = getIntent().getStringExtra("taskName");
         //get the project name from task activity
         projectName = getIntent().getStringExtra("projectName");
+
         //set the task name field
         taskNameTxt = binding.taskinput;
         taskNameTxt.setText(taskName);
+
         //set the project name field
         projectNameTxt = binding.projectNameTitle;
         projectNameTxt.setText(projectName);
 
+        //bind other elements
+        dueDateTxt = binding.displaydate;
+        descInputTxt = binding.descinput;
 
-        String [] states = getResources().getStringArray(R.array.states);
+
+
+
+        String[] states = getResources().getStringArray(R.array.states);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
+
+        binding.savebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get text fields
+                String updatedTask = taskNameTxt.getText().toString();
+                String updatedDescription = descInputTxt.getText().toString();
+                String updatedDate = dueDateTxt.getText().toString();
+                String state = binding.autoCompleteTextView.getText().toString();
+
+                saveToDatabase(updatedTask, updatedDescription, updatedDate, state);
+                Intent intent = new Intent(IndividualTask.this, TaskActivity.class);
+                intent.putExtra("projectName",projectName);
+                startActivity(intent);
+            }
+        });
     }
+
+    private void retrieveFromDatabase (){
+        
+    }
+
+    private void saveToDatabase(String task, String desc, String date, String state) {
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //get index of the task
+                    int index = -1;
+
+                    //Toast.makeText(getApplicationContext(), taskName + " i = " + index, Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                            Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index != -1) {
+                        CreateTasks updatedTask = new CreateTasks(projectName, task, desc, date, state);
+                        createProject.getTasksList().set(index, updatedTask);
+
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Error occured try later", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+
 }
