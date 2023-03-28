@@ -22,13 +22,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private int mMargin;
 
     private Context context;
+    private String projectName;
 
 
 
-    public TaskAdapter (List<MyTasks> tasklist, int margin, TaskActivity activity){
+    public TaskAdapter (List<MyTasks> tasklist, int margin, TaskActivity activity, String projectName){
         mTaskList = tasklist;
         mMargin = margin;
         this.context = activity;
+        this.projectName = projectName;
 
     }
 
@@ -75,6 +77,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     Intent intent = new Intent (context, IndividualTask.class);
                     String taskName = mTaskList.get(adapterPosition).getTaskName();
                     intent.putExtra("taskName", taskName);
+                    intent.putExtra("projectName", projectName);
                     context.startActivity(intent);
                 }
             }

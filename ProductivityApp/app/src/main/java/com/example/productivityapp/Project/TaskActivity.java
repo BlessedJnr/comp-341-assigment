@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -50,11 +52,13 @@ public class TaskActivity extends AppCompatActivity {
     //create the tasks list
     List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //get the project name
         String projectName = getIntent().getStringExtra("projectName");
+
 
         //firebase
         auth = FirebaseAuth.getInstance();
@@ -101,7 +105,7 @@ public class TaskActivity extends AppCompatActivity {
 
                     if (!text.isEmpty()) {
                         //create a new task
-                        CreateTasks tasks = new CreateTasks(text);
+                        CreateTasks tasks = new CreateTasks(text, projectName);
                         addToDatabase(tasks,text,projectName);
 
                         taskTxt.setText("");
@@ -126,7 +130,7 @@ public class TaskActivity extends AppCompatActivity {
     private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
         taskRecyclerView = binding.taskRecyclerView;
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TaskAdapter(arr, 15, TaskActivity.this);
+        adapter = new TaskAdapter(arr, 15, TaskActivity.this, getIntent().getStringExtra("projectName"));
         taskRecyclerView.setAdapter(adapter);
     }
 
@@ -155,7 +159,7 @@ public class TaskActivity extends AppCompatActivity {
                     }
                     //add the new task to the tasksList of the CreateProject object if it doesn't already exist
                     if (!taskExists) {
-                        createProject.getTasksList().add(new CreateTasks(taskName));
+                        createProject.getTasksList().add(new CreateTasks(taskName,projectName));
 
                         //update the CreateProject object in the database
                         DatabaseReference projectRef = dataSnapshot.getRef();
