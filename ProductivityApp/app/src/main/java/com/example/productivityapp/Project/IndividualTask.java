@@ -75,7 +75,7 @@ public class IndividualTask extends AppCompatActivity {
         binding.addduedate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
         binding.savebtn.setOnClickListener(new View.OnClickListener() {
