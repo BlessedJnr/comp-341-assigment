@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityIndividualTaskBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,8 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class IndividualTask extends AppCompatActivity {
-
-
     ActivityIndividualTaskBinding binding;
     private String taskName;
     private String projectName;
@@ -75,6 +72,12 @@ public class IndividualTask extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
+        binding.addduedate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
         binding.savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +87,7 @@ public class IndividualTask extends AppCompatActivity {
                 String updatedDate = dueDateTxt.getText().toString();
                 String state = binding.autoCompleteTextView.getText().toString();
 
-                saveToDatabase(updatedTask, updatedDescription, updatedDate, state);
+                updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
                 Intent intent = new Intent(IndividualTask.this, TaskActivity.class);
                 intent.putExtra("projectName",projectName);
                 startActivity(intent);
@@ -117,7 +120,6 @@ public class IndividualTask extends AppCompatActivity {
 
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
@@ -125,7 +127,7 @@ public class IndividualTask extends AppCompatActivity {
         });
     }
 
-    private void saveToDatabase(String task, String desc, String date, String state) {
+    private void updateDatabaseTask(String task, String desc, String date, String state) {
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -138,6 +140,7 @@ public class IndividualTask extends AppCompatActivity {
                     for (int i = 0; i < createProject.getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
                             Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
+                            taskName = task;
                             index = i;
                             break;
                         }
@@ -157,15 +160,10 @@ public class IndividualTask extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
-
-
-}
+    }
