@@ -14,6 +14,9 @@
         android:theme="@style/Theme.ProductivityApp"
         tools:targetApi="31">
         <activity
+            android:name=".Project.EditDescriptionActivity"
+            android:exported="false" />
+        <activity
             android:name=".Project.IndividualTask"
             android:exported="false" />
         <activity

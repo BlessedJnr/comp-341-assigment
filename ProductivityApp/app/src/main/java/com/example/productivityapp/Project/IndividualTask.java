@@ -119,6 +119,8 @@ public class IndividualTask extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
+                startActivity(intent);
             }
         });
         binding.savebtn.setOnClickListener(new View.OnClickListener() {
