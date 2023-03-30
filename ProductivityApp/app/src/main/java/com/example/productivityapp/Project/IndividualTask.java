@@ -114,6 +114,13 @@ public class IndividualTask extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+        descInputTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
+            }
+        });
         binding.savebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

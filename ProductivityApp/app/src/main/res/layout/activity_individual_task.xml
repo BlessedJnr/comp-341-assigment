@@ -17,14 +17,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
     <com.google.android.material.textfield.TextInputLayout
-        style="?attr/textInputFilledStyle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:id="@+id/taskname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Task"
         android:layout_marginTop="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         app:layout_constraintTop_toBottomOf="@id/project_name_title"
         app:layout_constraintStart_toStartOf="parent"
         >
@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         app:layout_constraintTop_toBottomOf="@id/taskname"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp">
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp">
 
         <Button
             android:id="@+id/addduedate"
@@ -57,6 +57,7 @@
             android:text="Due Date"
             android:textSize="17sp"
             android:textColor="@color/black"
+
             />
         <TextView
             android:id="@+id/displaydate"
