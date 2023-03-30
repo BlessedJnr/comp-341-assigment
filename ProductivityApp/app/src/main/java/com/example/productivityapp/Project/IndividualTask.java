@@ -3,10 +3,12 @@ package com.example.productivityapp.Project;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 public class IndividualTask extends AppCompatActivity {
     ActivityIndividualTaskBinding binding;
     private String taskName;
@@ -32,7 +38,9 @@ public class IndividualTask extends AppCompatActivity {
     //get the currently logged in user name
     private FirebaseAuth auth;
     private FirebaseUser user;
-    DatabaseReference currentUserProjectRef;
+    private DatabaseReference currentUserProjectRef;
+    private int year, monthOfYear, day;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +80,38 @@ public class IndividualTask extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
+
+
         binding.addduedate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //get the instance of a calendar
+                final Calendar calendar;
 
+                //getting the year, month, day
+                calendar = Calendar.getInstance();
+                year = calendar.get(Calendar.YEAR);
+                monthOfYear = calendar.get(Calendar.MONTH);
+                day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                //creating a date picker dialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        IndividualTask.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.YEAR, year);
+                                cal.set(Calendar.MONTH, month);
+                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+                                String selectedDate = dateFormat.format(cal.getTime());
+                                binding.displaydate.setText(selectedDate);
+                            }
+                        },
+                        year, monthOfYear, day);
+
+                datePickerDialog.show();
             }
         });
         binding.savebtn.setOnClickListener(new View.OnClickListener() {
