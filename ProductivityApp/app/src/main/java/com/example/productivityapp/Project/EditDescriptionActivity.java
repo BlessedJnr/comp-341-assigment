@@ -14,5 +14,7 @@ public class EditDescriptionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = EditDescriptionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.taskDescription.setText(getIntent().getStringExtra("taskDescription"));
     }
 }

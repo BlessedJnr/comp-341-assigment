@@ -120,6 +120,7 @@ public class IndividualTask extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
+                intent.putExtra("taskDescription", descInputTxt.getText().toString());
                 startActivity(intent);
             }
         });
