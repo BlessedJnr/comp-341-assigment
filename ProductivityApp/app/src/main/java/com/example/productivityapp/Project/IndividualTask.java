@@ -245,4 +245,9 @@ public class IndividualTask extends AppCompatActivity {
             }
         });
     }
+
+
+    private void deleteDatabaseTask (){
+
+    }
     }
