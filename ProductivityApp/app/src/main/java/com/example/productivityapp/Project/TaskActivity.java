@@ -51,14 +51,12 @@ public class TaskActivity extends AppCompatActivity {
     DatabaseReference currentUserProjectRef;
     //create the tasks list
     List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //get the project name
         String projectName = getIntent().getStringExtra("projectName");
-
 
         //firebase
         auth = FirebaseAuth.getInstance();
@@ -96,7 +94,6 @@ public class TaskActivity extends AppCompatActivity {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
-
         taskTxt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -123,9 +120,6 @@ public class TaskActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
     }
     private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
         taskRecyclerView = binding.taskRecyclerView;
@@ -133,7 +127,6 @@ public class TaskActivity extends AppCompatActivity {
         adapter = new TaskAdapter(arr, 15, TaskActivity.this, getIntent().getStringExtra("projectName"));
         taskRecyclerView.setAdapter(adapter);
     }
-
     private void hideKeyboard (){
         View view = this.getCurrentFocus();
         if (view != null){
@@ -141,7 +134,6 @@ public class TaskActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
     private void addToDatabase(CreateTasks tasks, String taskName, String projectName) {
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,8 +166,6 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void retrieveTasks() {
         taskItems.clear();

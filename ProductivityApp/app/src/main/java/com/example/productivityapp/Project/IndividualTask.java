@@ -3,7 +3,6 @@ package com.example.productivityapp.Project;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityIndividualTaskBinding;
 import com.google.android.material.textfield.TextInputEditText;
@@ -25,7 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -157,6 +154,8 @@ public class IndividualTask extends AppCompatActivity {
         switch (id){
             case R.id.taskDelete:
                 Toast.makeText(getApplicationContext(), "Delete Clicked", Toast.LENGTH_SHORT).show();
+                deleteDatabaseTask();
+                openTaskActivity();
                 return true;
             case R.id.taskExit:
                 openTaskActivity();
@@ -247,7 +246,42 @@ public class IndividualTask extends AppCompatActivity {
     }
 
 
-    private void deleteDatabaseTask (){
+    private void deleteDatabaseTask () {
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
 
+                    //get index of the task
+                    int index = -1;
+
+                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                            Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
+                            index = i;
+                            break;
+                        }
+                    }
+
+                    if (index != -1) {
+                        createProject.getTasksList().remove(index);
+
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Error occured try later", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     }
