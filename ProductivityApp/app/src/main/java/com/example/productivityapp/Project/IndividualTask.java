@@ -2,10 +2,13 @@ package com.example.productivityapp.Project;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -57,13 +60,16 @@ public class IndividualTask extends AppCompatActivity {
         String encodedEmail = email.replace(".", ",");
         currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
+        //Toolbar
+        Toolbar toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
         //get task name from task activity
         taskName = getIntent().getStringExtra("taskName");
         //get the project name from task activity
         projectName = getIntent().getStringExtra("projectName");
 
         //set the task name field
-        taskNameTxt = binding.taskinput;
+        taskNameTxt = binding.taskInput;
         taskNameTxt.setText(taskName);
 
         //set the project name field
@@ -79,8 +85,7 @@ public class IndividualTask extends AppCompatActivity {
         String[] states = getResources().getStringArray(R.array.states);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
-
-
+        
 
         binding.addduedate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +144,29 @@ public class IndividualTask extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.individual_task_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.taskDelete:
+                Toast.makeText(getApplicationContext(), "Delete Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.taskExit:
+                Toast.makeText(getApplicationContext(), "Exit Clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void retrieveFromDatabase (){
