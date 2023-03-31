@@ -85,7 +85,7 @@ public class IndividualTask extends AppCompatActivity {
         String[] states = getResources().getStringArray(R.array.states);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
-        
+
 
         binding.addduedate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,9 +139,7 @@ public class IndividualTask extends AppCompatActivity {
                 String state = binding.autoCompleteTextView.getText().toString();
 
                 updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
-                Intent intent = new Intent(IndividualTask.this, TaskActivity.class);
-                intent.putExtra("projectName",projectName);
-                startActivity(intent);
+                openTaskActivity();
             }
         });
     }
@@ -161,13 +159,20 @@ public class IndividualTask extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Delete Clicked", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.taskExit:
-                Toast.makeText(getApplicationContext(), "Exit Clicked", Toast.LENGTH_SHORT).show();
+                openTaskActivity();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void openTaskActivity (){
+        Intent intent = new Intent(IndividualTask.this, TaskActivity.class);
+        intent.putExtra("projectName",projectName);
+        startActivity(intent);
+    }
+
 
     private void retrieveFromDatabase (){
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
