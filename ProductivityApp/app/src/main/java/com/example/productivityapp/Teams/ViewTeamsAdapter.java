@@ -1,5 +1,6 @@
 package com.example.productivityapp.Teams;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,19 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
         layoutParams.topMargin = margin;
         layoutParams.bottomMargin = margin;
         holder.itemView.setLayoutParams(layoutParams);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();
+                if(adapterPosition != RecyclerView.NO_POSITION) {
+                    String teamName = mTeamItems.get(adapterPosition).getTeamName();
+                    Intent intent = new Intent(context, RetrieveData.class);
+                    intent.putExtra("teamName", teamName);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
