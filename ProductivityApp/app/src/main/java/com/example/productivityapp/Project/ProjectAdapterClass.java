@@ -35,25 +35,15 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position){
         ProjectItem projectItem = mProjectItems.get(position);
-        holder.mImageView.setImageResource(projectItem.getImageResource());
         holder.mTextView.setText(projectItem.getText());
 
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
 
         int margin = 18;
-        int width = holder.itemView.getResources().getDisplayMetrics().widthPixels / 2 - margin *2;
-        layoutParams.width = width;
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.topMargin = margin;
         layoutParams.bottomMargin = margin;
-
-        if (position % 2 == 0) {
-            layoutParams.leftMargin = margin;
-            layoutParams.rightMargin = margin / 2;
-        } else {
-            layoutParams.leftMargin = margin / 2;
-            layoutParams.rightMargin = margin;
-        }
         holder.itemView.setLayoutParams(layoutParams);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,21 +71,15 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mImageView = itemView.findViewById(R.id.project_card_image);
             mTextView = itemView.findViewById(R.id.project_card_title);
         }
     }
 
     public static class ProjectItem {
-        private int mImageResource;
         private String mText;
 
-        public ProjectItem (int imageResource, String text) {
-            mImageResource = imageResource;
+        public ProjectItem (String text) {
             mText = text;
-        }
-        public int getImageResource(){
-            return mImageResource;
         }
 
         public String getText(){

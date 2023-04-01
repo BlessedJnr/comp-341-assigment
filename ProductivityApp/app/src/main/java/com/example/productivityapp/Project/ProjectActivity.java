@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productivityapp.R;
@@ -113,7 +114,7 @@ public class ProjectActivity extends AppCompatActivity {
     private void buildRecyclerView() {
         RecyclerView mRecyclerView = binding.recyclerView;
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
         mAdapter = new ProjectAdapterClass(projectItems, ProjectActivity.this);
         mRecyclerView.setAdapter(mAdapter);
     }
@@ -147,7 +148,7 @@ public class ProjectActivity extends AppCompatActivity {
 
                     //add project to the list of project items
                     assert project != null;
-                    projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, project.getProjectName()));
+                    projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
 
                 }
 

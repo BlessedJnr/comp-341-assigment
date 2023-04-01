@@ -64,7 +64,6 @@
                         android:layout_marginTop="8dp"
                         android:text="18 Mar"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="13sp" />
 
                 </LinearLayout>

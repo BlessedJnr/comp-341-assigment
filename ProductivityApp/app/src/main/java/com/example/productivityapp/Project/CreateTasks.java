@@ -11,12 +11,17 @@ public class CreateTasks {
     private String dueDate = "01 Jan 2022";
 
     public CreateTasks () {
-
+        this.task = "Create task";
+        this.description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+        this.state = "Pending";
+        this.dueDate = "01 Jan 2022";
     }
 
     public CreateTasks(String task, String project) {
         this.task = task;
         this.project = project;
+        this.state = "Pending";
+        this.dueDate = "01 Jan 2022";
     }
 
     public CreateTasks(String mProject, String mTask, String desc, String dateDue, String mState){
