@@ -66,7 +66,6 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
     }
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        public ImageView mImageView;
         public TextView mTextView;
 
         public ViewHolder(View itemView) {

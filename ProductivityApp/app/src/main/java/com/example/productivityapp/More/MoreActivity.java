@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.productivityapp.Login.Login;
 import com.example.productivityapp.Profile;
 import com.example.productivityapp.Teams.ManageTeams;
+import com.example.productivityapp.Teams.TeamsActivity;
 import com.example.productivityapp.databinding.ActivityMoreBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,7 +48,7 @@ public class MoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MoreActivity.this, ManageTeams.class));
+                startActivity(new Intent(MoreActivity.this, TeamsActivity.class));
             }
         });
         logoutbtn = binding.logoutbtn;
