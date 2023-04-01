@@ -41,7 +41,7 @@ public class MoreActivity extends AppCompatActivity {
         });
 
 
-        teamsBtn = binding.accountbtn;
+        teamsBtn = binding.teamsbtn;
         teamsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
