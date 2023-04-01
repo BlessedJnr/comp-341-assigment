@@ -1,26 +1,25 @@
 package com.example.productivityapp.Project;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.os.Handler;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.example.productivityapp.databinding.ProjectCardItemBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,46 +32,51 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ProjectActivity extends AppCompatActivity {
 
     private ProjectAdapterClass mAdapter;
     private List<ProjectAdapterClass.ProjectItem> projectItems;
     private ActivityProjectBinding binding;
-    private ProjectCardItemBinding cardBinding;
-    private FloatingActionButton addProject;
     private TextInputEditText inputEditText;
-    private FirebaseDatabase database;
-    private DatabaseReference usersRef;
 
-    //get the currently logged in user name
-    private FirebaseAuth auth;
     private FirebaseUser user;
     DatabaseReference currentUserProjectRef;
+
+    public ProjectActivity(ProjectCardItemBinding cardBinding) {
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //firebase
-        auth = FirebaseAuth.getInstance();
+        //get the currently logged in user name
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        usersRef = database.getReference("Users");
-        currentUserProjectRef = usersRef.child(user.getUid()).child("projects");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+        String email = user.getEmail();
+        assert email != null;
+        String encodedEmail = email.replace(".", ",");
+        currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
         super.onCreate(savedInstanceState);
 
         //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        //set up the toolbar
+        Toolbar toolbar = binding.taskstoolbar;
+        setSupportActionBar(toolbar);
+        //get the projects from firebase
         createProjectCardList();
         buildRecyclerView();
         retrieveProject();
 
         //bind items
-        addProject = binding.floatingActionButton;
+        FloatingActionButton addProject = binding.floatingActionButton;
         inputEditText = binding.textInputEditText;
 
         //create bottom sheet ans
@@ -80,44 +84,52 @@ public class ProjectActivity extends AppCompatActivity {
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         //display bottom sheet to add project
-        addProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            }
-        });
+        addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
         //saves project on action send click in input field
-        inputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEND) {
-                    String text = inputEditText.getText().toString();
+        inputEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                String text = Objects.requireNonNull(inputEditText.getText()).toString();
 
-                    if (!text.isEmpty()) {
+                if (!text.isEmpty()) {
 
-                        //Create a new project
-                        CreateProject project = new CreateProject(text);
-                        addToDatabase(project);
+                    //Create a new project
+                    CreateProject project = new CreateProject(text);
+                    addToDatabase(project);
 
-                        retrieveProject();
+                    retrieveProject();
 
-                        inputEditText.setText("");
-                        hideKeyboard();
-                        // Add a delay of 100ms before hiding the bottom sheet
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            }
-                        }, 100);
-                    }
-                    return true;
+                    inputEditText.setText("");
+                    hideKeyboard();
+                    // Add a delay of 100ms before hiding the bottom sheet
+                    new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
                 }
-                return false;
+                return true;
             }
+            return false;
         });
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.taskDelete:
+                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.taskExit:
+                Toast.makeText(getApplicationContext(), "Exit clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
@@ -142,7 +154,6 @@ public class ProjectActivity extends AppCompatActivity {
     }
 
     private void addToDatabase(CreateProject project) {
-
         String uid = user.getUid();
         //push new project object
         DatabaseReference newProjectRef = currentUserProjectRef.push();
@@ -151,6 +162,7 @@ public class ProjectActivity extends AppCompatActivity {
 
     private void retrieveProject() {
         currentUserProjectRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //clear the list of project items
@@ -161,6 +173,7 @@ public class ProjectActivity extends AppCompatActivity {
                     CreateProject project = dataSnapshot.getValue(CreateProject.class);
 
                     //add project to the list of project items
+                    assert project != null;
                     projectItems.add(new ProjectAdapterClass.ProjectItem(R.drawable.img, project.getProjectName()));
 
                 }
@@ -170,10 +183,8 @@ public class ProjectActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
 }

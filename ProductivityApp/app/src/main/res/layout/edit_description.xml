@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/taskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|start"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:textSize="16sp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+            android:textStyle="normal"
+            android:backgroundTint="@color/white"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod vestibulum sapien eget iaculis. Sed efficitur ligula non ligula vestibulum, non bibendum ipsum pellentesque. Vestibulum vel lorem et nibh volutpat aliquet. Integer ac feugiat velit, in luctus neque. Morbi eu turpis tellus. Pellentesque tincidunt consectetur risus, id faucibus ipsum tristique id. Duis eget enim nisi. Sed in libero tincidunt, elementum eros at, auctor nibh. Duis tincidunt, magna eget interdum blandit, lectus nulla finibus odio, sit amet lacinia enim dolor at mauris." />
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

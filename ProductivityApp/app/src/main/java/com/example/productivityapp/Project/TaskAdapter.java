@@ -14,19 +14,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.productivityapp.R;
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<MyTasks> mTaskList;
     private int mMargin;
 
+    private Context context;
+    private String projectName;
 
 
-    public TaskAdapter (List<MyTasks> tasklist, int margin){
+
+    public TaskAdapter (List<MyTasks> tasklist, int margin, TaskActivity activity, String projectName){
         mTaskList = tasklist;
         mMargin = margin;
+        this.context = activity;
+        this.projectName = projectName;
 
     }
+
+    public void setTasksList(ArrayList<MyTasks> tasklist) {
+        mTaskList = tasklist;
+    }
+
 
     @NonNull
     @Override
@@ -57,6 +68,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
         holder.itemView.setLayoutParams(layoutParams);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();;
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent (context, IndividualTask.class);
+                    String taskName = mTaskList.get(adapterPosition).getTaskName();
+                    intent.putExtra("taskName", taskName);
+                    intent.putExtra("projectName", projectName);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -82,6 +108,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public MyTasks () {
 
         }
+
+        public MyTasks(String name){
+            this.taskName = name;
+            taskDueDate = "";
+        }
+
         public MyTasks (String name, String due){
             this.taskName = name;
             this.taskDueDate = due;
