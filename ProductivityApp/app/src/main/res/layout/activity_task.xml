@@ -39,6 +39,7 @@
             android:textSize="20sp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:layout_marginTop="30dp"
+            android:layout_marginStart="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 

@@ -60,11 +60,12 @@
                         android:id="@+id/task_due"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="13dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginLeft="50dp"
                         android:text="18 Mar"
                         android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+                        />
 
                 </LinearLayout>
 

@@ -9,14 +9,15 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/project_card"
-        android:elevation="10dp"
         app:cardBackgroundColor="#FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         app:cardCornerRadius="15dp"
         android:layout_margin="4dp"
+        app:cardElevation= "5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        style="@style/CardView.Light"
         >
 
         <TextView
