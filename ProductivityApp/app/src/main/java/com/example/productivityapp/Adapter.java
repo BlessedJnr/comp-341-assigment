@@ -17,8 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -52,75 +50,49 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
         holder.Project.setText(post.getProject());
         holder.Team.setText(post.getTeam());
 
-        holder.Edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogPlus dialogPlus = DialogPlus.newDialog(context)
-                        .setGravity(Gravity.CENTER)
-                        .setMargin(50, 0, 50, 0)
-                        .setContentHolder(new ViewHolder(R.layout.edit))
-                        .setExpanded(false)
-                        .create();
+        holder.Edit.setOnClickListener(v -> {
+            DialogPlus dialogPlus = DialogPlus.newDialog(context)
+                    .setGravity(Gravity.CENTER)
+                    .setMargin(50, 0, 50, 0)
+                    .setContentHolder(new ViewHolder(R.layout.edit))
+                    .setExpanded(false)
+                    .create();
 
-                View holderView = (LinearLayout) dialogPlus.getHolderView();
+            View holderView = (LinearLayout) dialogPlus.getHolderView();
 
-                EditText Fname = holderView.findViewById(R.id.name);
-                EditText Email = holderView.findViewById(R.id.email);
-                EditText Team = holderView.findViewById(R.id.team);
-                EditText Project = holderView.findViewById(R.id.project);
+            EditText Fname = holderView.findViewById(R.id.name);
+            EditText Email = holderView.findViewById(R.id.email);
+            EditText Team = holderView.findViewById(R.id.team);
+            EditText Project = holderView.findViewById(R.id.project);
 
-                if (Fname != null) {
-                    Fname.setText(post.getName());
+            if (Fname != null) {
+                Fname.setText(post.getName());
 
-                }
-                Email.setText(post.getEmail());
-                Team.setText(post.getTeam());
-                Project.setText(post.getProject());
-
-
-                Button Update = holderView.findViewById(R.id.updatebtn);
-
-                Update.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Map<String, Object> map = new HashMap<>();
-
-                        map.put("name", Fname.getText().toString());
-                        map.put("email", Email.getText().toString());
-                        map.put("team", Team.getText().toString());
-                        map.put("project", Project.getText().toString());
-
-                        FirebaseDatabase.getInstance().getReference().child("TeamMembers").child(encodedEmail)
-                                .child(key)
-                                .updateChildren(map)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        dialogPlus.dismiss();
-                                    }
-                                });
-
-                    }
-
-                });
-                dialogPlus.show();
             }
-        });
-        holder.Delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            Email.setText(post.getEmail());
+            Team.setText(post.getTeam());
+            Project.setText(post.getProject());
+            Button Update = holderView.findViewById(R.id.updatebtn);
+
+            Update.setOnClickListener(v1 -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("name", Fname.getText().toString());
+                map.put("email", Email.getText().toString());
+                map.put("team", Team.getText().toString());
+                map.put("project", Project.getText().toString());
 
                 FirebaseDatabase.getInstance().getReference().child("TeamMembers").child(encodedEmail)
-                        .child(getRef(holder.getAdapterPosition()).getKey())
-                        .removeValue()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
+                        .child(key)
+                        .updateChildren(map)
+                        .addOnCompleteListener(task -> dialogPlus.dismiss());
+
+            });
+            dialogPlus.show();
         });
+        holder.Delete.setOnClickListener(v -> FirebaseDatabase.getInstance().getReference().child("TeamMembers").child(encodedEmail)
+                .child(getRef(holder.getAdapterPosition()).getKey())
+                .removeValue()
+                .addOnCompleteListener(task -> Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()));
 
 
     }
