@@ -187,14 +187,6 @@ public class TaskActivity extends AppCompatActivity {
                     CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
                     assert createProject != null;
                     ArrayList<CreateTasks> tasksList = createProject.getTasksList();
-                    //ArrayList<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
-
-                    //loop through the tasksList and add each task to the taskItems list
-                    /*for (CreateTasks task : tasksList) {
-                        TaskAdapter.MyTasks taskItem = new TaskAdapter.MyTasks(task.getTask());
-                        taskItems.add(taskItem);
-                    }*/
-                    //set the taskItems list to the adapter and notify the adapter of the changes
                     adapter.setTasksList(tasksList);
                     adapter.notifyDataSetChanged();
                 }

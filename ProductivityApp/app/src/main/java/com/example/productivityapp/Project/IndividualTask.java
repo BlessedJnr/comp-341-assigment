@@ -123,6 +123,9 @@ public class IndividualTask extends AppCompatActivity {
             String updatedDate = dueDateTxt.getText().toString();
             String state = binding.autoCompleteTextView.getText().toString();
 
+            if (state.equals("")){
+                state = binding.autoCompleteTextView.getHint().toString();
+            }
             updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
             openTaskActivity();
         });
