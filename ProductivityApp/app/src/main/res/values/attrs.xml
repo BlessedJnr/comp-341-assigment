@@ -1,0 +1,13 @@
+
+<resources>
+    <attr name="colorCustomcolor1" format="color" />
+    <attr name="colorOnCustomcolor1" format="color" />
+    <attr name="colorCustomcolor1Container" format="color" />
+    <attr name="colorOnCustomcolor1Container" format="color" />
+    <attr name="harmonizeCustomcolor1" format="boolean" />
+    <attr name="colorCustomColor2" format="color" />
+    <attr name="colorOnCustomColor2" format="color" />
+    <attr name="colorCustomColor2Container" format="color" />
+    <attr name="colorOnCustomColor2Container" format="color" />
+    <attr name="harmonizeCustomColor2" format="boolean" />
+</resources>

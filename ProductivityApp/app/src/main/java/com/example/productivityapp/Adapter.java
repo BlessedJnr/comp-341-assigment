@@ -37,7 +37,6 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
 
     public Adapter(@NonNull FirebaseRecyclerOptions<Post> options, RetrieveData context) {
         super(options);
-
         this.context = context;
     }
 
@@ -85,7 +84,6 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
                         .child(key)
                         .updateChildren(map)
                         .addOnCompleteListener(task -> dialogPlus.dismiss());
-
             });
             dialogPlus.show();
         });
@@ -93,8 +91,6 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
                 .child(getRef(holder.getAdapterPosition()).getKey())
                 .removeValue()
                 .addOnCompleteListener(task -> Toast.makeText(context, "Deleted Successfully", Toast.LENGTH_SHORT).show()));
-
-
     }
 
     @NonNull

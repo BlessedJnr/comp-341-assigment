@@ -15,7 +15,7 @@
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textSize="30sp"
         android:gravity="center"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -98,8 +98,6 @@
         android:text="Sign Up"
         android:textSize="20sp"
         android:layout_marginTop="50dp"
-        android:backgroundTint="#000000"
-        android:textColor="@color/white"
         android:textStyle="bold"
         android:padding="15dp"
         android:layout_width="match_parent"

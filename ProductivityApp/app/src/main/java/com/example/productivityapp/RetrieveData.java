@@ -36,7 +36,6 @@ public class RetrieveData extends AppCompatActivity {
 
         FirebaseRecyclerOptions<Post> context=new FirebaseRecyclerOptions.Builder<Post>()
                 .setQuery(FirebaseDatabase.getInstance().getReference().child("TeamMembers").child(encodedEmail),Post.class).build();
-
         adapter=new Adapter(context,this);
         recyclerView.setAdapter(adapter);
 

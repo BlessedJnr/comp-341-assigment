@@ -74,7 +74,6 @@
             app:icon="@android:drawable/ic_input_add"
             android:text="Due Date"
             android:textSize="17sp"
-            android:textColor="@color/black"
 
             />
         <TextView
@@ -146,7 +145,6 @@
         android:layout_height="wrap_content"
         android:text="Save"
         android:backgroundTint="#000000"
-        android:textColor="@color/white"
         android:layout_marginTop="30dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
