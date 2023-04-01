@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.example.productivityapp.Login.Login;
 import com.example.productivityapp.Profile;
+import com.example.productivityapp.Teams.ManageTeams;
 import com.example.productivityapp.databinding.ActivityMoreBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

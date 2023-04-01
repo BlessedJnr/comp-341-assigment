@@ -1,4 +1,4 @@
-package com.example.productivityapp.More;
+package com.example.productivityapp.Teams;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.productivityapp.R;
-import com.example.productivityapp.Teams.RetrieveData;
 
 public class ManageTeams extends AppCompatActivity {
 
