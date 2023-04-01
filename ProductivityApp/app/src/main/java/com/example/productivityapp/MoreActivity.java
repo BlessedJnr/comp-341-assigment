@@ -13,29 +13,34 @@ import com.google.firebase.auth.FirebaseAuthException;
 
 
 public class MoreActivity extends AppCompatActivity {
-    private Button backbutton;
+
     private Button teamsBtn;
 
     private  Button logoutbtn;
+
+    private  Button profilebtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more);
 
-        backbutton = (Button) findViewById(R.id.backbtn);
-        backbutton.setOnClickListener(new View.OnClickListener() {
+
+        profilebtn=(Button)findViewById(R.id.accountbtn);
+        profilebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MoreActivity.this, MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(MoreActivity.this,Profile.class));
+
             }
         });
+
+
         teamsBtn = (Button) findViewById(R.id.teamsbtn);
         teamsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MoreActivity.this,RetrieveData.class));
+                startActivity(new Intent(MoreActivity.this,ManageTeams.class));
             }
         });
         logoutbtn=findViewById(R.id.logoutbtn);
