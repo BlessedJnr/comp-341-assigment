@@ -18,6 +18,12 @@
             android:exported="false" />
         <activity
             android:name=".Project.IndividualTask"
+            android:exported="false"/>
+        <activity
+            android:name=".ManageTeams"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
             android:exported="false" />
         <activity
             android:name=".Login.Login"
@@ -36,6 +42,12 @@
             android:exported="false" />
         <activity
             android:name=".MoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RetrieveData"
+            android:exported="false" />
+        <activity
+            android:name=".AddingMembers"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

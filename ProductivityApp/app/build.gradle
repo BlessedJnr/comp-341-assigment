@@ -7,6 +7,8 @@ android {
     namespace 'com.example.productivityapp'
     compileSdk 33
 
+
+
     defaultConfig {
         applicationId "com.example.productivityapp"
         minSdk 21
@@ -44,6 +46,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation 'com.google.firebase:firebase-database:20.1.0'
     implementation platform('com.google.firebase:firebase-bom:31.3.0')
+
+
+    implementation 'com.firebaseui:firebase-ui-database:8.0.0'
+
+    implementation 'com.orhanobut:dialogplus:1.11@aar'
+
 
 
 }
