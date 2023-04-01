@@ -44,10 +44,6 @@ public class ProjectActivity extends AppCompatActivity {
     private FirebaseUser user;
     DatabaseReference currentUserProjectRef;
 
-    public ProjectActivity(ProjectCardItemBinding cardBinding) {
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,7 +64,7 @@ public class ProjectActivity extends AppCompatActivity {
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //set up the toolbar
-        Toolbar toolbar = binding.taskstoolbar;
+        Toolbar toolbar = binding.projecttoolbar;
         setSupportActionBar(toolbar);
         //get the projects from firebase
         createProjectCardList();
@@ -108,29 +104,6 @@ public class ProjectActivity extends AppCompatActivity {
             }
             return false;
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.taskDelete:
-                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.taskExit:
-                Toast.makeText(getApplicationContext(), "Exit clicked", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 
     private void createProjectCardList() {

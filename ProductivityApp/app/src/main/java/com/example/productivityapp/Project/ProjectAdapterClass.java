@@ -25,7 +25,6 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
         mProjectItems = projectItem;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder (@NonNull ViewGroup parent, int viewType){

@@ -3,6 +3,8 @@ package com.example.productivityapp.Project;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -11,8 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityTaskBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -62,11 +67,13 @@ public class TaskActivity extends AppCompatActivity {
         binding = ActivityTaskBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //setup up the toolbar
+        Toolbar toolbar = binding.projecttasktoolbar;
+        setSupportActionBar(toolbar);
         TextView projectNameTxt = binding.projectNameTitle;
         projectNameTxt.setText(projectName);
-
+        //get the projects tasks
         buildRecyclerView(taskItems);
-
         retrieveTasks();
 
         //create a bottom-sheet and make it hidden
@@ -97,6 +104,29 @@ public class TaskActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.project_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.projectdelete:
+                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.projectexit:
+                Toast.makeText(getApplicationContext(), "Exit clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
     private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
         RecyclerView taskRecyclerView = binding.taskRecyclerView;
