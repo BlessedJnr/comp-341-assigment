@@ -1,18 +1,16 @@
 package com.example.productivityapp.Project;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityIndividualTaskBinding;
 import com.google.android.material.textfield.TextInputEditText;
@@ -23,21 +21,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 public class IndividualTask extends AppCompatActivity {
     ActivityIndividualTaskBinding binding;
     private String taskName;
     private String projectName;
-    private TextView projectNameTxt, dueDateTxt, descInputTxt;
+    private TextView dueDateTxt;
+    private TextView descInputTxt;
     private TextInputEditText taskNameTxt;
-    private FirebaseDatabase database;
-    private DatabaseReference usersRef;
-    //get the currently logged in user name
-    private FirebaseAuth auth;
-    private FirebaseUser user;
     private DatabaseReference currentUserProjectRef;
     private int year, monthOfYear, day;
 
@@ -49,11 +45,14 @@ public class IndividualTask extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //firebase
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        database = FirebaseDatabase.getInstance();
-        usersRef = database.getReference("Users");
+        //get the currently logged in user name
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+        assert user != null;
         String email = user.getEmail();
+        assert email != null;
         String encodedEmail = email.replace(".", ",");
         currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
@@ -70,7 +69,7 @@ public class IndividualTask extends AppCompatActivity {
         taskNameTxt.setText(taskName);
 
         //set the project name field
-        projectNameTxt = binding.projectNameTitle;
+        TextView projectNameTxt = binding.projectNameTitle;
         projectNameTxt.setText(projectName);
 
         //bind other elements
@@ -84,69 +83,55 @@ public class IndividualTask extends AppCompatActivity {
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
 
-        binding.addduedate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //get the instance of a calendar
-                final Calendar calendar;
+        binding.addduedate.setOnClickListener(v -> {
+            //get the instance of a calendar
+            final Calendar calendar;
 
-                //getting the year, month, day
-                calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                monthOfYear = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
+            //getting the year, month, day
+            calendar = Calendar.getInstance();
+            year = calendar.get(Calendar.YEAR);
+            monthOfYear = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                //creating a date picker dialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        IndividualTask.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Calendar cal = Calendar.getInstance();
-                                cal.set(Calendar.YEAR, year);
-                                cal.set(Calendar.MONTH, month);
-                                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-                                String selectedDate = dateFormat.format(cal.getTime());
-                                binding.displaydate.setText(selectedDate);
-                            }
-                        },
-                        year, monthOfYear, day);
+            //creating a date picker dialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    IndividualTask.this,
+                    (view, year, month, dayOfMonth) -> {
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Calendar.YEAR, year);
+                        cal.set(Calendar.MONTH, month);
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
+                        String selectedDate = dateFormat.format(cal.getTime());
+                        binding.displaydate.setText(selectedDate);
+                    },
+                    year, monthOfYear, day);
 
-                datePickerDialog.show();
-            }
+            datePickerDialog.show();
         });
 
-        descInputTxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
-                intent.putExtra("taskDescription", descInputTxt.getText().toString());
-                startActivity(intent);
-            }
+        descInputTxt.setOnClickListener(v -> {
+            Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
+            intent.putExtra("taskDescription", descInputTxt.getText().toString());
+            startActivity(intent);
         });
-        binding.savebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //get text fields
-                String updatedTask = taskNameTxt.getText().toString();
-                String updatedDescription = descInputTxt.getText().toString();
-                String updatedDate = dueDateTxt.getText().toString();
-                String state = binding.autoCompleteTextView.getText().toString();
+        binding.savebtn.setOnClickListener(v -> {
+            //get text fields
+            String updatedTask = Objects.requireNonNull(taskNameTxt.getText()).toString();
+            String updatedDescription = descInputTxt.getText().toString();
+            String updatedDate = dueDateTxt.getText().toString();
+            String state = binding.autoCompleteTextView.getText().toString();
 
-                updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
-                openTaskActivity();
-            }
+            updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
+            openTaskActivity();
         });
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.individual_task_menu, menu);
+        getMenuInflater().inflate(R.menu.options_menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -165,14 +150,11 @@ public class IndividualTask extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
     private void openTaskActivity (){
         Intent intent = new Intent(IndividualTask.this, TaskActivity.class);
         intent.putExtra("projectName",projectName);
         startActivity(intent);
     }
-
-
     private void retrieveFromDatabase (){
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -183,7 +165,7 @@ public class IndividualTask extends AppCompatActivity {
                     //get index of the task
                     int index = -1;
 
-                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
                             index = i;
                             break;
@@ -204,7 +186,6 @@ public class IndividualTask extends AppCompatActivity {
             }
         });
     }
-
     private void updateDatabaseTask(String task, String desc, String date, String state) {
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -215,7 +196,7 @@ public class IndividualTask extends AppCompatActivity {
                     //get index of the task
                     int index = -1;
 
-                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
                             Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
                             taskName = task;
@@ -223,7 +204,6 @@ public class IndividualTask extends AppCompatActivity {
                             break;
                         }
                     }
-
                     if (index != -1) {
                         CreateTasks updatedTask = new CreateTasks(projectName, task, desc, date, state);
                         createProject.getTasksList().set(index, updatedTask);
@@ -234,7 +214,7 @@ public class IndividualTask extends AppCompatActivity {
                         break;
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Error occured try later", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Error occurred try later", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -244,29 +224,23 @@ public class IndividualTask extends AppCompatActivity {
             }
         });
     }
-
-
     private void deleteDatabaseTask () {
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
-
                     //get index of the task
                     int index = -1;
-
-                    for (int i = 0; i < createProject.getTasksList().size(); i++) {
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
                             Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
                             index = i;
                             break;
                         }
                     }
-
                     if (index != -1) {
                         createProject.getTasksList().remove(index);
-
                         //update the CreateProject object in the database
                         DatabaseReference projectRef = dataSnapshot.getRef();
                         projectRef.setValue(createProject);
@@ -277,7 +251,6 @@ public class IndividualTask extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 

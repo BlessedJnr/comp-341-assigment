@@ -2,16 +2,17 @@ package com.example.productivityapp.Project;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
@@ -20,7 +21,6 @@ import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.example.productivityapp.databinding.ProjectCardItemBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,10 +66,14 @@ public class ProjectActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+
         //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
+        //set up the toolbar
+        Toolbar toolbar = binding.taskstoolbar;
+        setSupportActionBar(toolbar);
+        //get the projects from firebase
         createProjectCardList();
         buildRecyclerView();
         retrieveProject();
@@ -121,6 +125,29 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.taskDelete:
+                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.taskExit:
+                Toast.makeText(getApplicationContext(), "Exit clicked", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 
