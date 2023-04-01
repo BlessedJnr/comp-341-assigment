@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,16 +54,16 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
             DialogPlus dialogPlus = DialogPlus.newDialog(context)
                     .setGravity(Gravity.CENTER)
                     .setMargin(50, 0, 50, 0)
-                    .setContentHolder(new ViewHolder(R.layout.edit))
+                    .setContentHolder(new ViewHolder(R.layout.updated_edit))
                     .setExpanded(false)
                     .create();
 
             View holderView = (LinearLayout) dialogPlus.getHolderView();
 
-            EditText Fname = holderView.findViewById(R.id.name);
-            EditText Email = holderView.findViewById(R.id.email);
-            EditText Team = holderView.findViewById(R.id.team);
-            EditText Project = holderView.findViewById(R.id.project);
+            TextInputEditText Fname = holderView.findViewById(R.id.updatenameinput);
+            TextInputEditText Email = holderView.findViewById(R.id.updateemailinput);
+            TextInputEditText Team = holderView.findViewById(R.id.teamnameinput);
+            TextInputEditText Project = holderView.findViewById(R.id.updateprojectnameinput);
 
             if (Fname != null) {
                 Fname.setText(post.getName());

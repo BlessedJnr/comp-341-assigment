@@ -28,14 +28,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Name "
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="30dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/nameinput"
+                android:id="@+id/updatenameinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -58,7 +58,7 @@
             >
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailinput"
+                android:id="@+id/updateemailinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -101,7 +101,7 @@
             app:layout_constraintTop_toBottomOf="@id/teamname">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/projectnameinput"
+                android:id="@+id/updateprojectnameinput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -114,6 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Update"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.949"
