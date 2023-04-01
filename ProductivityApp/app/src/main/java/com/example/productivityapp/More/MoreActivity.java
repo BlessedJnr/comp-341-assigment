@@ -1,4 +1,4 @@
-package com.example.productivityapp;
+package com.example.productivityapp.More;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.productivityapp.Login.Login;
+import com.example.productivityapp.Profile;
 import com.example.productivityapp.databinding.ActivityMoreBinding;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 
@@ -35,7 +35,7 @@ public class MoreActivity extends AppCompatActivity {
         profilebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MoreActivity.this,Profile.class));
+                startActivity(new Intent(MoreActivity.this, Profile.class));
 
             }
         });
@@ -46,7 +46,7 @@ public class MoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(MoreActivity.this,ManageTeams.class));
+                startActivity(new Intent(MoreActivity.this, ManageTeams.class));
             }
         });
         logoutbtn = binding.logoutbtn;

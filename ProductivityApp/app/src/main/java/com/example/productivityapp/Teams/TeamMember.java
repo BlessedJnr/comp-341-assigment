@@ -1,4 +1,4 @@
-package com.example.productivityapp;
+package com.example.productivityapp.Teams;
 
 public class TeamMember {
 

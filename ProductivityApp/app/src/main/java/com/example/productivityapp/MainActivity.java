@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.productivityapp.More.MoreActivity;
 import com.example.productivityapp.Project.ProjectActivity;
 
 public class MainActivity extends AppCompatActivity {

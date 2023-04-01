@@ -1,6 +1,7 @@
 package com.example.productivityapp.Project;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -121,7 +122,8 @@ public class TaskActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.projectexit:
-                Toast.makeText(getApplicationContext(), "Exit clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), ProjectActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

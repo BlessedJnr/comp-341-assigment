@@ -1,4 +1,4 @@
-package com.example.productivityapp;
+package com.example.productivityapp.More;
 
 public class Post {
     String name,email,team,project;

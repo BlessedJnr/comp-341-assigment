@@ -1,13 +1,13 @@
-package com.example.productivityapp;
+package com.example.productivityapp.More;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.productivityapp.Teams.TeamMember;
 import com.example.productivityapp.databinding.ActivityAddingMembersBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;

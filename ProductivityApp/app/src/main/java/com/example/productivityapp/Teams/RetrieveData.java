@@ -1,4 +1,4 @@
-package com.example.productivityapp;
+package com.example.productivityapp.Teams;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 
+import com.example.productivityapp.More.Adapter;
+import com.example.productivityapp.More.Post;
+import com.example.productivityapp.R;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

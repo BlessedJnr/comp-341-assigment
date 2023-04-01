@@ -23,7 +23,7 @@
             android:name=".Project.IndividualTask"
             android:exported="false" />
         <activity
-            android:name=".ManageTeams"
+            android:name=".More.ManageTeams"
             android:exported="false" />
         <activity
             android:name=".Profile"
@@ -44,13 +44,13 @@
             android:name=".Project.ProjectActivity"
             android:exported="false" />
         <activity
-            android:name=".MoreActivity"
+            android:name=".More.MoreActivity"
             android:exported="false" />
         <activity
-            android:name=".RetrieveData"
+            android:name=".Teams.RetrieveData"
             android:exported="false" />
         <activity
-            android:name=".AddingMembers"
+            android:name=".More.AddingMembers"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
