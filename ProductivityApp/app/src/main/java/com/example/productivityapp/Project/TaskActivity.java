@@ -42,7 +42,7 @@ public class TaskActivity extends AppCompatActivity {
 
     DatabaseReference currentUserProjectRef;
     //create the tasks list
-    List<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+    List<CreateTasks> taskItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +128,7 @@ public class TaskActivity extends AppCompatActivity {
         }
 
     }
-    private void buildRecyclerView ( List<TaskAdapter.MyTasks> arr){
+    private void buildRecyclerView ( List<CreateTasks> arr){
         RecyclerView taskRecyclerView = binding.taskRecyclerView;
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new TaskAdapter(arr, 15, TaskActivity.this, getIntent().getStringExtra("projectName"));
@@ -186,16 +186,16 @@ public class TaskActivity extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
                     assert createProject != null;
-                    List<CreateTasks> tasksList = createProject.getTasksList();
-                    ArrayList<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
+                    ArrayList<CreateTasks> tasksList = createProject.getTasksList();
+                    //ArrayList<TaskAdapter.MyTasks> taskItems = new ArrayList<>();
 
                     //loop through the tasksList and add each task to the taskItems list
-                    for (CreateTasks task : tasksList) {
+                    /*for (CreateTasks task : tasksList) {
                         TaskAdapter.MyTasks taskItem = new TaskAdapter.MyTasks(task.getTask());
                         taskItems.add(taskItem);
-                    }
+                    }*/
                     //set the taskItems list to the adapter and notify the adapter of the changes
-                    adapter.setTasksList(taskItems);
+                    adapter.setTasksList(tasksList);
                     adapter.notifyDataSetChanged();
                 }
             }

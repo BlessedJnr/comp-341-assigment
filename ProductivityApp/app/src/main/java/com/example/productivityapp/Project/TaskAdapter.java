@@ -12,13 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productivityapp.R;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
-    private List<MyTasks> mTaskList;
+    private List<CreateTasks> mTaskList;
     private int mMargin;
 
     private Context context;
@@ -26,7 +27,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
 
 
-    public TaskAdapter (List<MyTasks> tasklist, int margin, TaskActivity activity, String projectName){
+    public TaskAdapter (List<CreateTasks> tasklist, int margin, TaskActivity activity, String projectName){
         mTaskList = tasklist;
         mMargin = margin;
         this.context = activity;
@@ -34,7 +35,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     }
 
-    public void setTasksList(ArrayList<MyTasks> tasklist) {
+    public void setTasksList(ArrayList<CreateTasks> tasklist) {
         mTaskList = tasklist;
     }
 
@@ -48,9 +49,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder (@NonNull ViewHolder holder, int position) {
-        MyTasks tasks = mTaskList.get(position);
-        holder.taskName.setText(tasks.getTaskName());
-        holder.taskDueDate.setText(tasks.getTaskDueDate());
+        CreateTasks tasks = mTaskList.get(position);
+        holder.taskName.setText(tasks.getTask());
+        holder.taskDueDate.setText(tasks.getDueDate());
 
         // Set constraints for the card item view
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
@@ -75,7 +76,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
                     Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent (context, IndividualTask.class);
-                    String taskName = mTaskList.get(adapterPosition).getTaskName();
+                    String taskName = mTaskList.get(adapterPosition).getTask();
                     intent.putExtra("taskName", taskName);
                     intent.putExtra("projectName", projectName);
                     context.startActivity(intent);
