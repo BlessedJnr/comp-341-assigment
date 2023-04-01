@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Productivity App</string>
+
+    string.txt
+    //Headings
+    <string name="heading_one">Track Your Tasks</string>
+    <string name="heading_two">Instant Notifications</string>
+    <string name="heading_three">Collaboration</string>
+    <string name="heading_fourth">Pay Anywhere</string>
+
+    //Description
+    <string name="desc_one">Improve your productivity by keeping track of your progress in each task</string>
+    <string name="desc_two">Stay up-to-date with instant notifications - receive real-time updates and important information as they happen, so you never miss a beat</string>
+    <string name="desc_three">Collaborate effortlessly with your team members - assign tasks, share ideas,and get things done efficiently</string>
+    <string name="desc_fourth">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
 </resources>
