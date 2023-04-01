@@ -17,12 +17,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FirstName LastName"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+        app:layout_constraintTop_toBottomOf="@id/profilepic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <Button
         android:id="@+id/teamsbtn"
-        android:layout_width="322dp"
+        android:layout_width="match_parent"
         android:layout_height="87dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:text="TEAMS"
+        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,14 +45,18 @@
 
     <Button
         android:id="@+id/accountbtn"
-        android:layout_width="322dp"
+        android:layout_width="match_parent"
         android:layout_height="87dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:text="PROFILE"
+        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/teamsbtn" />
+        app:layout_constraintTop_toBottomOf="@+id/teamsbtn"
+        />
 
     <Button
         android:id="@+id/logoutbtn"
