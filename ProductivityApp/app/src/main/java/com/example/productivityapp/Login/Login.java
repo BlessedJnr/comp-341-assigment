@@ -47,6 +47,13 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        binding.signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login.this, Signup.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
