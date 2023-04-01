@@ -8,28 +8,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.productivityapp.databinding.ActivityAddingMembersBinding;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class AddingMembers extends AppCompatActivity {
-    EditText name,email,team,project;
-
+    TextInputEditText name,email,team,project;
     Button add;
-
     DatabaseReference TeamMembers;
+    ActivityAddingMembersBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_adding_members);
+        binding = ActivityAddingMembersBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        name=findViewById(R.id.name);
-        email=findViewById(R.id.email);
-        team=findViewById(R.id.team);
-        project=findViewById(R.id.project);
-        add=findViewById(R.id.add);
+        name = binding.addnameinput;
+        email = binding.addemailinput;
+        team = binding.addteamnameinput;
+        project = binding.addprojectnameinput;
+        add = binding.add;
 
         //get the current user
         FirebaseAuth auth = FirebaseAuth.getInstance();
