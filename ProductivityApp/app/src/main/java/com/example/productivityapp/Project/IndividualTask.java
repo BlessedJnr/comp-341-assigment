@@ -227,37 +227,30 @@ public class IndividualTask extends AppCompatActivity {
             }
         });
     }
-    private void deleteDatabaseTask () {
+    private void deleteDatabaseTask() {
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
-                    //get index of the task
-                    int index = -1;
-                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
-                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
-                            Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
-                            index = i;
-                            break;
+                    if (createProject != null && createProject.getTasksList() != null) {
+                        for (CreateTasks task : createProject.getTasksList()) {
+                            if (task.getTask().equals(taskName)) {
+                                createProject.getTasksList().remove(task);
+                                dataSnapshot.getRef().setValue(createProject);
+                                Toast.makeText(getApplicationContext(), "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
-                    }
-                    if (index != -1) {
-                        createProject.getTasksList().remove(index);
-                        //update the CreateProject object in the database
-                        DatabaseReference projectRef = dataSnapshot.getRef();
-                        projectRef.setValue(createProject);
-                        break;
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(), "Error occured try later", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(getApplicationContext(), "Failed to Delete Task", Toast.LENGTH_SHORT).show();
             }
         });
     }
-    }
+
+}
