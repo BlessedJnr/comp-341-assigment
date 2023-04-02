@@ -3,6 +3,7 @@ package com.example.productivityapp;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 /**
@@ -14,6 +15,9 @@ public class ProductivityWidget extends AppWidgetProvider {
                                 int appWidgetId) {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.productivity_widget);
+
+        Intent projectIntent = new Intent(context, ProjectWidgetService.class);
+        views.setRemoteAdapter(R.id.widget_lv_projects, projectIntent);
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
