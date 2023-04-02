@@ -33,7 +33,7 @@ public class ManageTeams extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(ManageTeams.this, RetrieveData.class));
+                //startActivity(new Intent(ManageTeams.this, RetrieveData.class));
             }
         });
     }

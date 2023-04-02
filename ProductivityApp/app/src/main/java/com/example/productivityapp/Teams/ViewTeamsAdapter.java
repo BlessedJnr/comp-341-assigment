@@ -47,7 +47,7 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
                 int adapterPosition = holder.getAdapterPosition();
                 if(adapterPosition != RecyclerView.NO_POSITION) {
                     String teamName = mTeamItems.get(adapterPosition).getTeamName();
-                    Intent intent = new Intent(context,RetrieveData.class);
+                    Intent intent = new Intent(context,GetTeamMembers.class);
                     intent.putExtra("teamName", teamName);
                     context.startActivity(intent);
                 }

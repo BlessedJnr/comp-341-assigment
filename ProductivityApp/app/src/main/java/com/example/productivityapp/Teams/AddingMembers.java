@@ -3,12 +3,12 @@ package com.example.productivityapp.Teams;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.productivityapp.More.Post;
 import com.example.productivityapp.databinding.ActivityAddingMembersBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +50,9 @@ public class AddingMembers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addMembers();
+                Intent intent = new Intent(AddingMembers.this, TeamsActivity.class);
+                startActivity(intent);
+
             }
         });
 
@@ -57,7 +60,7 @@ public class AddingMembers extends AppCompatActivity {
 
     private void addMembers() {
 
-        teamMemberRef.orderByChild("teamName").equalTo(team.getText().toString()).addValueEventListener(new ValueEventListener() {
+        teamMemberRef.orderByChild("teamName").equalTo(team.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
@@ -70,7 +73,7 @@ public class AddingMembers extends AppCompatActivity {
                     for (int i = 0 ; i < createTeams.getMembers().size(); i++) {
                         if (createTeams.getMembers().get(i).getEmail().equals(email.getText().toString())){
                             index = i;
-                            Toast.makeText(AddingMembers.this, "i: " + index, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddingMembers.this, "Member already exists", Toast.LENGTH_SHORT).show();
                             break;
                         }
                     }
@@ -80,7 +83,7 @@ public class AddingMembers extends AppCompatActivity {
                         createTeams.getMembers().add(post);
                         DatabaseReference teamsRef = dataSnapshot.getRef();
                         teamsRef.setValue(createTeams);
-                        Toast.makeText(AddingMembers.this, "Tried adding", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddingMembers.this, "Added", Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -88,9 +91,10 @@ public class AddingMembers extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(AddingMembers.this, "Failed to add members", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
+
 }

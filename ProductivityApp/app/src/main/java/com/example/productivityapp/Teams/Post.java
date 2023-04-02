@@ -1,18 +1,17 @@
-package com.example.productivityapp.More;
+package com.example.productivityapp.Teams;
+
+import java.util.PrimitiveIterator;
 
 public class Post {
-    String name,email;
+    private String name = "";
+    private String email = "";
 
     public Post() {
-        this.name = "";
-        this.email = "";
     }
 
     public Post(String mEmail) {
-        this.name = "";
         this.email = mEmail;
     }
-
 
     public Post(String name, String email) {
         this.name = name;
@@ -35,3 +34,4 @@ public class Post {
         this.email = email;
     }
 }
+

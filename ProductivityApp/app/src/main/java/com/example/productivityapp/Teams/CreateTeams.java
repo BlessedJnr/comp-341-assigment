@@ -1,7 +1,5 @@
 package com.example.productivityapp.Teams;
 
-import com.example.productivityapp.More.Post;
-
 import java.util.ArrayList;
 
 public class CreateTeams {
