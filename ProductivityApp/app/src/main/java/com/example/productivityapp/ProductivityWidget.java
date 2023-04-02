@@ -19,6 +19,10 @@ public class ProductivityWidget extends AppWidgetProvider {
         Intent projectIntent = new Intent(context, ProjectWidgetService.class);
         views.setRemoteAdapter(R.id.widget_lv_projects, projectIntent);
 
+        Intent taskIntent = new Intent(context, TaskWidgetService.class);
+        taskIntent.putExtra("EXTRA_PROJECT_POSITION", 1);
+        views.setRemoteAdapter(R.id.widget_lv_tasks, taskIntent);
+
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 

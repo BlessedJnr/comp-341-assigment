@@ -19,15 +19,15 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
     public void onCreate() {
         projects = new ArrayList<>();
 
-        projects.add("Project 1");
-        projects.add("Project 2");
-        projects.add("Project 3");
-        projects.add("Project 4");
+
     }
 
     @Override
     public void onDataSetChanged() {
-
+        projects.add("Project 1");
+        projects.add("Project 2");
+        projects.add("Project 3");
+        projects.add("Project 4");
     }
 
     @Override
