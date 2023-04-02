@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <TextView
+        android:id="@+id/widget_tv_taskname"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:paddingRight="20dp"
+        android:text="Task name"
+        android:textSize="20sp" />
+
+
+    <TextView
+        android:id="@+id/widget_tv_taskstatus"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/widget_tv_taskname"
+        android:gravity="center_vertical"
+        android:paddingRight="10dp"
+        android:text="Pending"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/widget_tv_taskdue"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/widget_tv_taskstatus"
+        android:gravity="center_vertical"
+        android:text="12-jan-2022"
+        android:textSize="18sp" />
+
+    <ImageButton
+        android:id="@+id/widget_btn_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/widget_btn_done"
+        android:layout_toRightOf="@id/widget_tv_taskdue"
+        android:paddingRight="15dp"
+        android:src="@drawable/ic_toggle_off" />
+
+    <ImageButton
+        android:id="@+id/widget_btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="end"
+        android:src="@drawable/ic_done" />
+
+</RelativeLayout>
