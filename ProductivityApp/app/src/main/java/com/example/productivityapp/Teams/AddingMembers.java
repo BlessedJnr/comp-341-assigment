@@ -31,11 +31,12 @@ public class AddingMembers extends AppCompatActivity {
         binding = ActivityAddingMembersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        name = binding.addnameinput;
         email = binding.addemailinput;
         team = binding.addteamnameinput;
         project = binding.addprojectnameinput;
         add = binding.add;
+
+        team.setText(getIntent().getStringExtra("teamName"));
 
         //get the current user
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -50,7 +51,8 @@ public class AddingMembers extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 addMembers();
-                Intent intent = new Intent(AddingMembers.this, TeamsActivity.class);
+                Intent intent = new Intent(AddingMembers.this, GetTeamMembers.class);
+                intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
                 startActivity(intent);
 
             }

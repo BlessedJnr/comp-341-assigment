@@ -67,6 +67,7 @@ public class GetTeamMembers extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(GetTeamMembers.this, "Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(GetTeamMembers.this, AddingMembers.class);
+                intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
                 startActivity(intent);
             }
         });
