@@ -1,9 +1,22 @@
 package com.example.productivityapp.More;
 
 public class Post {
-    String name,email,team,project;
+    String name,email;
 
     public Post() {
+        this.name = "";
+        this.email = "";
+    }
+
+    public Post(String mEmail) {
+        this.name = "";
+        this.email = mEmail;
+    }
+
+
+    public Post(String name, String email) {
+        this.name = name;
+        this.email = email;
     }
 
     public String getName() {
@@ -20,31 +33,5 @@ public class Post {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getTeam() {
-        return team;
-    }
-
-    public void setTeam(String team) {
-        this.team = team;
-    }
-
-    public String getProject() {
-        return project;
-    }
-
-    public void setProject(String project) {
-        this.project = project;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", team='" + team + '\'' +
-                ", project='" + project + '\'' +
-                '}';
     }
 }

@@ -48,8 +48,6 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
         String key = getRef(holder.getAdapterPosition()).getKey();
         holder.Fname.setText(post.getName());
         holder.Email.setText(post.getEmail());
-        holder.Project.setText(post.getProject());
-        holder.Team.setText(post.getTeam());
 
         holder.Edit.setOnClickListener(v -> {
             DialogPlus dialogPlus = DialogPlus.newDialog(context)
@@ -71,8 +69,6 @@ public class Adapter extends FirebaseRecyclerAdapter<Post, Adapter.PostViewholde
 
             }
             Email.setText(post.getEmail());
-            Team.setText(post.getTeam());
-            Project.setText(post.getProject());
             Button Update = holderView.findViewById(R.id.updatebtn);
 
             Update.setOnClickListener(v1 -> {

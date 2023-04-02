@@ -1,28 +1,25 @@
 package com.example.productivityapp.Teams;
 
+import com.example.productivityapp.More.Post;
+
 import java.util.ArrayList;
 
 public class CreateTeams {
 
     private String teamName = "";
 
-    private ArrayList<String> members = new ArrayList<>();
-    private ArrayList<String> projectNames = new ArrayList<>();
+    private ArrayList<Post> members = new ArrayList<>();
+    private String projectName = "";
 
     public CreateTeams() {
         this.teamName = "";
         this.members = new ArrayList<>();
-        this.projectNames = new ArrayList<>();
+        this.projectName = "";
     }
     public CreateTeams(String teamName) {
         this.teamName = teamName;
         this.members = new ArrayList<>();
-        this.projectNames = new ArrayList<>();
-    }
-    public CreateTeams(String teamName, ArrayList<String> members, ArrayList<String> projectNames) {
-        this.teamName = teamName;
-        this.members = members;
-        this.projectNames = projectNames;
+        this.projectName = "";
     }
     public String getTeamName() {
         return teamName;
@@ -30,18 +27,20 @@ public class CreateTeams {
     public void setTeamName(String teamName) {
         this.teamName = teamName;
     }
-    public ArrayList<String> getMembers() {
-        return members;
+    public ArrayList<Post> getMembers() {
+        return this.members;
     }
-    public void setMembers(ArrayList<String> members) {
-        members = members;
+    public void setMembers(ArrayList<Post> members) {
+        this.members = members;
     }
-    public void setProjectNames(ArrayList<String> projectNames) {
-        this.projectNames = projectNames;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
-    public ArrayList<String> getProjectNames() {
-        return projectNames;
+    public String getProjectName() {
+        return projectName;
     }
+
+
 
 
 
