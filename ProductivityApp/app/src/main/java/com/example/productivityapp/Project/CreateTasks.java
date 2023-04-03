@@ -76,6 +76,7 @@ public class CreateTasks {
 
     public String getCurrentDate () {
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 3);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
         String date = formatter.format(calendar.getTime());
         return date;
