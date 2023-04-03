@@ -47,7 +47,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:fillViewport="true"
             android:layout_marginTop="20dp">
-            
+
                 <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
                 <RelativeLayout
                     android:layout_width="match_parent"

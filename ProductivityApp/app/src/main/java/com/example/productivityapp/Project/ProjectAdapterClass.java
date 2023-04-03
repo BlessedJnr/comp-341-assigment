@@ -39,7 +39,7 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
 
         ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
 
-        int margin = 18;
+        int margin = 10;
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
         layoutParams.topMargin = margin;
