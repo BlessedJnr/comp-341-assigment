@@ -3,10 +3,7 @@ package com.example.productivityapp.Project;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -14,12 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
-import com.example.productivityapp.databinding.ProjectCardItemBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -65,8 +59,6 @@ public class ProjectActivity extends AppCompatActivity {
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         //set up the toolbar
-        Toolbar toolbar = binding.projecttoolbar;
-        setSupportActionBar(toolbar);
         //get the projects from firebase
         createProjectCardList();
         buildRecyclerView();
@@ -84,23 +76,20 @@ public class ProjectActivity extends AppCompatActivity {
         addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
 
-        binding.addProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = Objects.requireNonNull(inputEditText.getText()).toString();
+        binding.addProject.setOnClickListener(v -> {
+            String text = Objects.requireNonNull(inputEditText.getText()).toString();
 
-                if (!text.isEmpty()) {
+            if (!text.isEmpty()) {
 
-                    //Create a new project
-                    CreateProject project = new CreateProject(text);
-                    addToDatabase(project);
+                //Create a new project
+                CreateProject project = new CreateProject(text);
+                addToDatabase(project);
 
-                    retrieveProject();
+                retrieveProject();
 
-                    inputEditText.setText("");
-                    // Add a delay of 100ms before hiding the bottom sheet
-                    new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
-                }
+                inputEditText.setText("");
+                // Add a delay of 100ms before hiding the bottom sheet
+                new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
             }
         });
     }
@@ -126,7 +115,6 @@ public class ProjectActivity extends AppCompatActivity {
     }
 
     private void addToDatabase(CreateProject project) {
-        String uid = user.getUid();
         //query for existing projects with the same name
         currentUserProjectRef.orderByChild("projectName").equalTo(project.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
