@@ -82,10 +82,11 @@ public class ProjectActivity extends AppCompatActivity {
 
         //display bottom sheet to add project
         addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+        
 
-        //saves project on action send click in input field
-        inputEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
+        binding.addProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String text = Objects.requireNonNull(inputEditText.getText()).toString();
 
                 if (!text.isEmpty()) {
@@ -95,15 +96,10 @@ public class ProjectActivity extends AppCompatActivity {
                     addToDatabase(project);
 
                     retrieveProject();
-
-                    inputEditText.setText("");
-                    hideKeyboard();
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
                 }
-                return true;
             }
-            return false;
         });
     }
 

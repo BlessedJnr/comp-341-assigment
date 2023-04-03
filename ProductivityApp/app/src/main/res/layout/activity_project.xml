@@ -75,10 +75,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@android:drawable/ic_input_add"
-        style="?attr/floatingActionButtonLargeStyle"/>
+        style="?attr/floatingActionButtonLargeStyle"
+        android:layout_marginBottom="70dp"/>
 
     <FrameLayout
         android:id="@+id/project_standard_btm_sheet"
@@ -91,27 +91,43 @@
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/project_drag_handle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content"/>
 
-        <!--Bottom sheet contents -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/project_filled_textfield"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?attr/textInputFilledStyle"
-            android:hint="Project Name">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_input_edit_text"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/project_filled_textfield"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:imeOptions="actionSend"
-                android:maxLength="50"
-                android:inputType="text"
-                android:maxLines="1"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+                style="?attr/textInputFilledStyle"
+                android:hint="Project Name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/text_input_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionSend"
+                    android:maxLength="50"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/addProject"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@android:drawable/ic_input_add"
+                android:text="Create"
+                android:layout_gravity="right"
+                android:textSize="17sp"/>
+        </LinearLayout>
+
     </FrameLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
