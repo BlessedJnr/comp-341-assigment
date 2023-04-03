@@ -6,6 +6,6 @@ import android.widget.RemoteViewsService;
 public class ProjectWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new ProjectRemoteViewsFactory(getApplicationContext());
+        return new ProjectRemoteViewsFactory(getApplicationContext(), intent);
     }
 }
