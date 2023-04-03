@@ -1,6 +1,8 @@
 package com.example.productivityapp.Project;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CreateTasks {
 
@@ -21,7 +23,7 @@ public class CreateTasks {
         this.task = task;
         this.project = project;
         this.state = "Pending";
-        this.dueDate = "01 Jan 2022";
+        this.dueDate = getCurrentDate();
     }
 
     public CreateTasks(String mProject, String mTask, String desc, String dateDue, String mState){
@@ -70,6 +72,13 @@ public class CreateTasks {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public String getCurrentDate () {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        String date = formatter.format(calendar.getTime());
+        return date;
     }
 
 
