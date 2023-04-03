@@ -87,23 +87,22 @@ public class TaskActivity extends AppCompatActivity {
 
 
         addTask.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
-        taskTxt.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND){
+
+        binding.createTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String text = Objects.requireNonNull(taskTxt.getText()).toString();
 
                 if (!text.isEmpty()) {
                     //create a new task
                     CreateTasks tasks = new CreateTasks(text, projectName);
                     addToDatabase(text,projectName);
-
                     taskTxt.setText("");
-                    hideKeyboard();
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
                 }
-                return true;
+
             }
-            return false;
         });
     }
 

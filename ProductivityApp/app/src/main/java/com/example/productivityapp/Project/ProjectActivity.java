@@ -82,7 +82,7 @@ public class ProjectActivity extends AppCompatActivity {
 
         //display bottom sheet to add project
         addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
-        
+
 
         binding.addProject.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +96,8 @@ public class ProjectActivity extends AppCompatActivity {
                     addToDatabase(project);
 
                     retrieveProject();
+
+                    inputEditText.setText("");
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
                 }
@@ -125,10 +127,27 @@ public class ProjectActivity extends AppCompatActivity {
 
     private void addToDatabase(CreateProject project) {
         String uid = user.getUid();
-        //push new project object
-        DatabaseReference newProjectRef = currentUserProjectRef.push();
-        newProjectRef.setValue(project);
+        //query for existing projects with the same name
+        currentUserProjectRef.orderByChild("projectName").equalTo(project.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    //project with the same name already exists, show an error message
+                    Toast.makeText(getApplicationContext(), "A project with the same name already exists.", Toast.LENGTH_SHORT).show();
+                } else {
+                    //no project with the same name exists, add the new project
+                    DatabaseReference newProjectRef = currentUserProjectRef.push();
+                    newProjectRef.setValue(project);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     private void retrieveProject() {
         currentUserProjectRef.addValueEventListener(new ValueEventListener() {

@@ -75,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="70dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@android:drawable/ic_input_add"
         tools:ignore="ImageContrastCheck" />
@@ -117,6 +117,16 @@
                     android:textColorHint="#757575" />
 
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/createTask"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@android:drawable/ic_input_add"
+                android:text="Create"
+                android:layout_gravity="right"
+                android:textSize="17sp"/>
         </LinearLayout>
     </FrameLayout>
 
