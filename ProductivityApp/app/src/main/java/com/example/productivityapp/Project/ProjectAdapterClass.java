@@ -77,6 +77,10 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
     public static class ProjectItem {
         private String mText;
 
+        public ProjectItem () {
+            this.mText = "";
+        }
+
         public ProjectItem (String text) {
             mText = text;
         }

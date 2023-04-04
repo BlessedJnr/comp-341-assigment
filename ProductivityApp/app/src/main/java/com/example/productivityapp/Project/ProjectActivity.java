@@ -27,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -116,6 +117,13 @@ public class ProjectActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (newText.equals("")){
+                    retrieveProject();
+                }
+                else {
+                    filteredProjects(newText);
+                }
+
                 return false;
             }
         });
@@ -163,6 +171,39 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void filteredProjects(String searchedProject) {
+        projectItems.clear();
+
+        // create a new query object with the filter condition
+        Query query = currentUserProjectRef.orderByChild("projectName").equalTo(searchedProject);
+
+        // attach a listener to retrieve the filtered data
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // process the retrieved data
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    /*ProjectAdapterClass.ProjectItem projectItem = dataSnapshot.getValue(ProjectAdapterClass.ProjectItem.class);
+                    projectItems.add(projectItem);*/
+
+                    //get the project object from the snapshot
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+
+                    //add project to the list of project items
+                    assert project != null;
+                    projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
     private void retrieveProject() {
