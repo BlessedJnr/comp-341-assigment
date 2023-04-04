@@ -75,7 +75,6 @@ public class ProjectActivity extends AppCompatActivity {
         //display bottom sheet to add project
         addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
-
         binding.addProject.setOnClickListener(v -> {
             String text = Objects.requireNonNull(inputEditText.getText()).toString();
 
@@ -90,6 +89,12 @@ public class ProjectActivity extends AppCompatActivity {
                 inputEditText.setText("");
                 // Add a delay of 100ms before hiding the bottom sheet
                 new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
+            }
+        });
+
+        binding.searchBar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
             }
         });
     }
