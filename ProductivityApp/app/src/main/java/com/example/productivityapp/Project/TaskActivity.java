@@ -119,15 +119,21 @@ public class TaskActivity extends AppCompatActivity {
         switch (id) {
             case R.id.projectdelete:
                 Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
+                deleteProject();
+                openProjectsActivity();
                 return true;
             case R.id.projectexit:
-                Intent intent = new Intent(getApplicationContext(), ProjectActivity.class);
-                startActivity(intent);
+                openProjectsActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void openProjectsActivity () {
+        Intent intent = new Intent(getApplicationContext(), ProjectActivity.class);
+        startActivity(intent);
     }
     private void buildRecyclerView ( List<CreateTasks> arr){
         RecyclerView taskRecyclerView = binding.taskRecyclerView;
@@ -196,6 +202,25 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void deleteProject() {
+        String projectName = getIntent().getStringExtra("projectName");
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    dataSnapshot.getRef().removeValue();
+                    Toast.makeText(TaskActivity.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(TaskActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
             }
         });
     }
