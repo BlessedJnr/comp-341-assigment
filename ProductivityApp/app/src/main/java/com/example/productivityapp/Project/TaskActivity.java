@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -109,6 +111,26 @@ public class TaskActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.project_options_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.task_search_bar);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Type here to search");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.equals("")){
+                    retrieveTasks();
+                }else {
+                    retrieveFilteredTasks(newText);
+                }
+                return false;
+            }
+        });
         return true;
     }
 
@@ -130,7 +152,6 @@ public class TaskActivity extends AppCompatActivity {
         }
 
     }
-
     private void openProjectsActivity () {
         Intent intent = new Intent(getApplicationContext(), ProjectActivity.class);
         startActivity(intent);
@@ -181,7 +202,6 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
-
     private void retrieveTasks() {
         taskItems.clear();
         String projectName = getIntent().getStringExtra("projectName");
@@ -205,7 +225,37 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
+    private void retrieveFilteredTasks(String task) {
+        String projectName = getIntent().getStringExtra("projectName");
+        Query query = currentUserProjectRef.orderByChild("projectName").equalTo(projectName);
 
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<CreateTasks> filteredItems = new ArrayList<>();
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+                    assert createProject != null;
+                    ArrayList<CreateTasks> tasksList = createProject.getTasksList();
+
+                    for (CreateTasks mTasks : tasksList) {
+                        if (mTasks.getTask().contains(task)) {
+                            filteredItems.add(mTasks);
+                        }
+                    }
+                }
+
+                adapter.setTasksList(filteredItems);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void deleteProject() {
         String projectName = getIntent().getStringExtra("projectName");
         currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
