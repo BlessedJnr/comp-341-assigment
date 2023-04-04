@@ -186,8 +186,6 @@ public class ProjectActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 // process the retrieved data
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    /*ProjectAdapterClass.ProjectItem projectItem = dataSnapshot.getValue(ProjectAdapterClass.ProjectItem.class);
-                    projectItems.add(projectItem);*/
 
                     //get the project object from the snapshot
                     CreateProject project = dataSnapshot.getValue(CreateProject.class);
