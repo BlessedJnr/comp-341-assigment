@@ -3,16 +3,20 @@ package com.example.productivityapp.Project;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -54,10 +58,13 @@ public class ProjectActivity extends AppCompatActivity {
         currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
         super.onCreate(savedInstanceState);
-
         //binding for project activity
         binding = ActivityProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        Toolbar toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
         //set up the toolbar
         //get the projects from firebase
         createProjectCardList();
@@ -92,11 +99,27 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
 
-        binding.searchBar.setOnClickListener(new View.OnClickListener() {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.project_search_menu_item, menu);
+        MenuItem menuItem = menu.findItem(R.id.project_search_bar);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView.setQueryHint("Type here to search");
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void createProjectCardList() {
