@@ -176,7 +176,9 @@ public class ProjectActivity extends AppCompatActivity {
         projectItems.clear();
 
         // create a new query object with the filter condition
-        Query query = currentUserProjectRef.orderByChild("projectName").equalTo(searchedProject);
+        Query query = currentUserProjectRef.orderByChild("projectName")
+                .startAt(searchedProject)
+                .endAt(searchedProject + "\uf8ff");
 
         // attach a listener to retrieve the filtered data
         query.addListenerForSingleValueEvent(new ValueEventListener() {
