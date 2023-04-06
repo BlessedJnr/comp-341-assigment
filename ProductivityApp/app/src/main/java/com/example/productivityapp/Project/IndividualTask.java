@@ -29,8 +29,7 @@ import java.util.Objects;
 
 public class IndividualTask extends AppCompatActivity {
     ActivityIndividualTaskBinding binding;
-    private String taskName;
-    private String projectName;
+    private String taskName, projectName, updatedDescription;
     private TextView dueDateTxt;
     private TextView descInputTxt;
     private TextInputEditText taskNameTxt;
@@ -64,6 +63,9 @@ public class IndividualTask extends AppCompatActivity {
         //get the project name from task activity
         projectName = getIntent().getStringExtra("projectName");
 
+        //updated task description
+        updatedDescription = getIntent().getStringExtra("updatedTaskDescription");
+
         //set the task name field
         taskNameTxt = binding.taskInput;
         taskNameTxt.setText(taskName);
@@ -81,7 +83,6 @@ public class IndividualTask extends AppCompatActivity {
         String[] states = getResources().getStringArray(R.array.states);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.task_state, states);
         binding.autoCompleteTextView.setAdapter(arrayAdapter);
-
 
         binding.addduedate.setOnClickListener(v -> {
             //get the instance of a calendar
@@ -113,6 +114,8 @@ public class IndividualTask extends AppCompatActivity {
         descInputTxt.setOnClickListener(v -> {
             Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
+            intent.putExtra("taskName", taskName);
+            intent.putExtra("projectName", projectName);
             intent.putExtra("task_description", descInputTxt.getText().toString());
             startActivity(intent);
         });
@@ -176,8 +179,15 @@ public class IndividualTask extends AppCompatActivity {
                     }
                     if (index != -1){
                         dueDateTxt.setText(createProject.getTasksList().get(index).getDueDate());
-                        descInputTxt.setText(createProject.getTasksList().get(index).getDescription());
                         binding.taskState.setHint(createProject.getTasksList().get(index).getState());
+
+                        //check if task description was updated
+                        if (updatedDescription != null && !updatedDescription.isEmpty()){
+                            //updates the description field
+                            descInputTxt.setText(updatedDescription);
+                        } else {
+                            descInputTxt.setText(createProject.getTasksList().get(index).getDescription());
+                        }
 
                     }
 

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +40,11 @@ public class EditDescriptionActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.description_edit_save:
-                Toast.makeText(this, "Save clicked", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EditDescriptionActivity.this, IndividualTask.class);
+                intent.putExtra("updatedTaskDescription", binding.taskDescription.getText().toString());
+                intent.putExtra("projectName", getIntent().getStringExtra("projectName"));
+                intent.putExtra("taskName", getIntent().getStringExtra("taskName"));
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
