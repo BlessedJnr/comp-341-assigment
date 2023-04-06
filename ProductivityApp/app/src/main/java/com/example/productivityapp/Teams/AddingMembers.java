@@ -6,9 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.productivityapp.Project.CreateProject;
+import com.example.productivityapp.Project.ProjectAdapterClass;
+import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityAddingMembersBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,11 +24,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class AddingMembers extends AppCompatActivity {
-    TextInputEditText name,email,team,project;
+    TextInputEditText name,email,team;
     Button add;
-    DatabaseReference teamMemberRef;
+    DatabaseReference teamMemberRef, currentProjectRef;
     ActivityAddingMembersBinding binding;
+    private ArrayList<String> projectList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +41,6 @@ public class AddingMembers extends AppCompatActivity {
 
         email = binding.addemailinput;
         team = binding.addteamnameinput;
-        project = binding.addprojectnameinput;
         add = binding.add;
 
         team.setText(getIntent().getStringExtra("teamName"));
@@ -46,6 +53,12 @@ public class AddingMembers extends AppCompatActivity {
         String encodedEmail = email.replace(".", ",");
 
         teamMemberRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(encodedEmail).child("Teams");
+        currentProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
+
+        //retrive the projects and set them as a dropdown
+        retrieveProjects();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.team_project, projectList);
+        binding.autoCompleteTextView.setAdapter(arrayAdapter);
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +110,29 @@ public class AddingMembers extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void retrieveProjects() {
+        currentProjectRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get the project object from the snapshot
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+
+                    //add project to the list of project items
+                    assert project != null;
+                    projectList.add(project.getProjectName());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
