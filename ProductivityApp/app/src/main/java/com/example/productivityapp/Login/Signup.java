@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.productivityapp.MainActivity;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,6 +71,8 @@ public class Signup extends AppCompatActivity {
                                         .setDisplayName(username)
                                         .build();
                                 user.updateProfile(profileUpdates);
+                                Intent intent = new Intent (Signup.this, MainActivity.class);
+                                startActivity(intent);
                             }
                             else {
                                 Toast.makeText(Signup.this, "Sign up failed", Toast.LENGTH_SHORT).show();
