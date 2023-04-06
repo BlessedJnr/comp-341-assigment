@@ -135,4 +135,5 @@ public class MainActivity extends AppCompatActivity {
 
         return viewPag.getCurrentItem() + i;
     }
+
 }

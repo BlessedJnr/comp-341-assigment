@@ -52,4 +52,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHoldder> {
             team = itemView.findViewById(R.id.names);
         }
     }
+
 }

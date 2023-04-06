@@ -7,12 +7,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
 import java.util.ArrayList;
 
 public class HomeScreen extends AppCompatActivity {
+    TextView textView;
+
     RecyclerView recyclerView;
     ArrayList<String> projectName,tasks, team;
     MyAdapter adapter;
@@ -23,6 +27,10 @@ public class HomeScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_home_screen);
+        textView = findViewById(R.id.textView);
+        textView.setText("Home");
+
+
         projectName = new ArrayList<>();
         tasks = new ArrayList<>();
         team = new ArrayList<>();
@@ -53,6 +61,8 @@ public class HomeScreen extends AppCompatActivity {
         projectName.add("ProductivityApp");
         tasks.add("Wireframes,Research");
         team.add("Tawidza");
+
+
            // }
         //}
     }
@@ -62,7 +72,7 @@ public class HomeScreen extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.home:
-                // Handle menu item 1 click
+
                 return true;
             case R.id.Projects:
                 // Handle menu item 2 click
