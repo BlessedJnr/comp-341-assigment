@@ -204,8 +204,6 @@ public class ProjectActivity extends AppCompatActivity {
         });
     }
 
-
-
     private void retrieveProject() {
         currentUserProjectRef.addValueEventListener(new ValueEventListener() {
 
