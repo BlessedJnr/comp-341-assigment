@@ -24,7 +24,8 @@
             android:exported="false" />
         <activity
             android:name=".Project.EditDescriptionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Project.IndividualTask"/>
         <activity
             android:name=".Project.IndividualTask"
             android:exported="false" />

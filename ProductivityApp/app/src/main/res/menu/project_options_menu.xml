@@ -10,8 +10,8 @@
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView"/>
-    <item  android:id="@+id/projectdelete"
+    <item  android:id="@+id/project_delete"
         android:title="Delete"/>
-    <item  android:id="@+id/projectexit"
+    <item  android:id="@+id/project_exit"
         android:title="Exit"/>
 </menu>

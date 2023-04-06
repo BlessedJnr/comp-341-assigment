@@ -1,24 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <EditText
-            android:id="@+id/taskDescription"
+            android:id="@+id/task_description"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="top|start"
             android:inputType="textMultiLine"
             android:scrollbars="vertical"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:textStyle="normal"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod vestibulum sapien eget iaculis. Sed efficitur ligula non ligula vestibulum, non bibendum ipsum pellentesque. Vestibulum vel lorem et nibh volutpat aliquet. Integer ac feugiat velit, in luctus neque. Morbi eu turpis tellus. Pellentesque tincidunt consectetur risus, id faucibus ipsum tristique id. Duis eget enim nisi. Sed in libero tincidunt, elementum eros at, auctor nibh. Duis tincidunt, magna eget interdum blandit, lectus nulla finibus odio, sit amet lacinia enim dolor at mauris." />
-    </ScrollView>
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod vestibulum sapien eget iaculis. Sed efficitur ligula non ligula vestibulum, non bibendum ipsum pellentesque. Vestibulum vel lorem et nibh volutpat aliquet. Integer ac feugiat velit, in luctus neque. Morbi eu turpis tellus. Pellentesque tincidunt consectetur risus, id faucibus ipsum tristique id. Duis eget enim nisi. Sed in libero tincidunt, elementum eros at, auctor nibh. Duis tincidunt, magna eget interdum blandit, lectus nulla finibus odio, sit amet lacinia enim dolor at mauris."
+            android:background="@android:color/transparent"/>
 
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

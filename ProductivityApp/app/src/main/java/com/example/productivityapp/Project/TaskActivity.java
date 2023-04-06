@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -139,12 +138,12 @@ public class TaskActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.projectdelete:
+            case R.id.project_delete:
                 Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 deleteProject();
                 openProjectsActivity();
                 return true;
-            case R.id.projectexit:
+            case R.id.project_exit:
                 openProjectsActivity();
                 return true;
             default:
