@@ -27,11 +27,11 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public void onDataSetChanged() {
-        tasks.add(new Task("Task 1", Task.PENDING, "21-aug-2022"));
-        tasks.add(new Task("Task 2", Task.PENDING, "21-aug-2022"));
-        tasks.add(new Task("Task 3", Task.PENDING, "21-aug-2022"));
-        tasks.add(new Task("Task 4", Task.PENDING, "21-aug-2022"));
-        tasks.add(new Task("Task 5", Task.PENDING, "21-aug-2022"));
+        tasks.add(new Task("Task 1", "pending", "21-aug-2022", false));
+        tasks.add(new Task("Task 2", "in progress", "21-aug-2022", false));
+        tasks.add(new Task("Task 3", "pending", "21-aug-2022", false));
+        tasks.add(new Task("Task 4", "pending", "21-aug-2022", false));
+        tasks.add(new Task("Task 5", "pending", "21-aug-2022", false));
     }
 
     @Override

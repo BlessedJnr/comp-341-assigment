@@ -1,33 +1,18 @@
 package com.example.productivityapp;
 
 public class Task {
-    private String name;
-    private String status;
-    private String dueDate;
-    private boolean isInprogress;
-    private boolean isDone;
+    String name;
+    String status;
+    String dueDate;
+    boolean isInprogress;
+    boolean isDone;
 
-    public static final String DONE= "com.example.productivityapp.DONE";
-    public static final String PENDING= "com.example.productivityapp.PENDING";
-    public static final String IN_PROGRESS= "com.example.productivityapp.IN_PROGRESS";
-
-    public Task(String name, String dueDate, String status) {
+    public Task(String name, String status, String dueDate, boolean isDone) {
         this.name = name;
+        this.status = status;
         this.dueDate = dueDate;
-
-        if(status.equals(DONE)) {
-            this.status = "done";
-            this.isInprogress = false;
-            isDone = true;
-        } else if (status.equals(PENDING)) {
-            this.status = "pending";
-            this.isInprogress = false;
-            this.isDone = false;
-        }else if (status.equals(IN_PROGRESS)){
-            this.status = "in-progress";
-            this.isDone = false;
-            this.isInprogress = true;
-        }
+        this.isInprogress = status.equalsIgnoreCase("in progress");
+        this.isDone = isDone;
     }
 
     public String getName() {

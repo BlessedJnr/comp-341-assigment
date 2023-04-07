@@ -8,14 +8,9 @@ public class Project {
     boolean isComplete;
     List<Task> tasks;
 
-    public Project(String name, boolean isComplete) {
+    public Project(String name, boolean status, List<Task> tasks) {
         this.name = name;
-        this.isComplete = isComplete;
-    }
-
-    public Project(String name, boolean isComplete, List<Task> tasks) {
-        this.name = name;
-        this.isComplete = isComplete;
+        this.isComplete = status;
         this.tasks = tasks;
     }
 
