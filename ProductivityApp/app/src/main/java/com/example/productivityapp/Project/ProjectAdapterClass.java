@@ -53,6 +53,7 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
                     String projectName = mProjectItems.get(adapterPosition).getText();
                     Intent intent = new Intent(context, TaskActivity.class);
                     intent.putExtra("projectName", projectName);
+                    intent.putExtra("collaborated", projectItem.isCollaborated());
                     context.startActivity(intent);
                 }
             }
@@ -76,6 +77,7 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
 
     public static class ProjectItem {
         private String mText;
+        private boolean collaborated = false;
 
         public ProjectItem () {
             this.mText = "";
@@ -85,8 +87,24 @@ public class ProjectAdapterClass extends RecyclerView.Adapter<ProjectAdapterClas
             mText = text;
         }
 
+        public ProjectItem(String mText, boolean collaborated) {
+            this.mText = mText;
+            this.collaborated = collaborated;
+        }
+
         public String getText(){
             return mText;
+        }
+
+        public void setText(String mText) {
+            this.mText = mText;
+        }
+        public boolean isCollaborated() {
+            return collaborated;
+        }
+
+        public void setCollaborated(boolean collaborated) {
+            this.collaborated = collaborated;
         }
     }
 

@@ -70,7 +70,8 @@ public class ProjectActivity extends AppCompatActivity {
         //get the projects from firebase
         createProjectCardList();
         buildRecyclerView();
-        retrieveProject();
+        updateProjects();
+        displayProjects();
 
         //bind items
         FloatingActionButton addProject = binding.floatingActionButton;
@@ -92,7 +93,8 @@ public class ProjectActivity extends AppCompatActivity {
                 CreateProject project = new CreateProject(text, encodedEmail);
                 addToDatabase(project);
 
-                retrieveProject();
+                updateProjects();
+                displayProjects();
 
                 inputEditText.setText("");
                 // Add a delay of 100ms before hiding the bottom sheet
@@ -118,7 +120,7 @@ public class ProjectActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.equals("")){
-                    retrieveProject();
+                    displayProjects();
                 }
                 else {
                     filteredProjects(newText);
@@ -204,24 +206,84 @@ public class ProjectActivity extends AppCompatActivity {
         });
     }
 
-    private void retrieveProject() {
+    private void updateProjects() {
         currentUserProjectRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 //clear the list of project items
-                projectItems.clear();
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     //get the project object from the snapshot
                     CreateProject project = dataSnapshot.getValue(CreateProject.class);
 
-                    //add project to the list of project items
-                    assert project != null;
-                    projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
-
+                    if (project.getCollaborated()){
+                        getUpdatedProject(project);
+                    }
                 }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void getUpdatedProject(CreateProject createProject) {
+
+        DatabaseReference collaboratedProjectRef = FirebaseDatabase.getInstance().getReference("Collaborated Teams").child(createProject.getMainOwner());
+        collaboratedProjectRef.orderByChild("projectName").equalTo(createProject.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear the list of project items
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get the project object from the snapshot
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+                    updateProjects(project);
+                    break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateProjects (CreateProject updatedProject){
+        currentUserProjectRef.orderByChild("projectName").equalTo(updatedProject.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //update the CreateProject object in the database
+                    DatabaseReference projectRef = dataSnapshot.getRef();
+                    projectRef.setValue(updatedProject);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void displayProjects(){
+        projectItems.clear();
+        currentUserProjectRef.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear the list of project items
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get the project object from the snapshot
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+                    projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
+                }
                 mAdapter.notifyDataSetChanged();
             }
 

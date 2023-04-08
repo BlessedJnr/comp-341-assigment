@@ -51,6 +51,7 @@ public class TaskActivity extends AppCompatActivity {
 
         //get the project name
         String projectName = getIntent().getStringExtra("projectName");
+        Boolean isCollaborated = getIntent().getBooleanExtra("collaborated", false);
 
         //firebase
         //get the currently logged in user name
@@ -62,6 +63,7 @@ public class TaskActivity extends AppCompatActivity {
         String email = user.getEmail();
         assert email != null;
         String encodedEmail = email.replace(".", ",");
+        //get references to the databases
         currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
 
 
@@ -76,6 +78,7 @@ public class TaskActivity extends AppCompatActivity {
         projectNameTxt.setText(projectName);
         //get the projects tasks
         buildRecyclerView(taskItems);
+
         retrieveTasks();
 
         //create a bottom-sheet and make it hidden
@@ -273,6 +276,4 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
