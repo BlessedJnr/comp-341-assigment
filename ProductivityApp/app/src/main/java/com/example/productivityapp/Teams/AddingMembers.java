@@ -11,6 +11,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.productivityapp.Login.CreateUser;
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.ProjectAdapterClass;
 import com.example.productivityapp.R;
@@ -29,9 +30,10 @@ import java.util.ArrayList;
 public class AddingMembers extends AppCompatActivity {
     TextInputEditText name,email,team;
     Button add;
-    DatabaseReference teamMemberRef, currentProjectRef;
+    DatabaseReference teamMemberRef, currentProjectRef, userRef;
     ActivityAddingMembersBinding binding;
     private ArrayList<String> projectList = new ArrayList<>();
+    private boolean userAlreadyExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class AddingMembers extends AppCompatActivity {
 
         teamMemberRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(encodedEmail).child("Teams");
         currentProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
+        userRef = FirebaseDatabase.getInstance().getReference("All Users").child("Emails");
 
         //retrive the projects and set them as a dropdown
         retrieveProjects();
@@ -63,11 +66,7 @@ public class AddingMembers extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addMembers();
-                Intent intent = new Intent(AddingMembers.this, GetTeamMembers.class);
-                intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
-                startActivity(intent);
-
+                userExists();
             }
         });
 
@@ -93,7 +92,7 @@ public class AddingMembers extends AppCompatActivity {
                         }
                     }
 
-                    if (index == -1){
+                    if (index == -1 && userAlreadyExists){
                         Post post = new Post(email.getText().toString());
                         createTeams.getMembers().add(post);
                         DatabaseReference teamsRef = dataSnapshot.getRef();
@@ -101,17 +100,23 @@ public class AddingMembers extends AppCompatActivity {
                         Toast.makeText(AddingMembers.this, "Added", Toast.LENGTH_SHORT).show();
                     }
 
+                    else {
+                        Toast.makeText(AddingMembers.this, "User does not exist", Toast.LENGTH_SHORT).show();
+
+                    }
+
                 }
+                redirectToTeams();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(AddingMembers.this, "Failed to add members", Toast.LENGTH_SHORT).show();
+                redirectToTeams();
             }
         });
 
     }
-
     private void retrieveProjects() {
         currentProjectRef.addValueEventListener(new ValueEventListener() {
 
@@ -133,6 +138,33 @@ public class AddingMembers extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void userExists () {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    CreateUser createUser = dataSnapshot.getValue(CreateUser.class);
+
+                    if (createUser.getEmail().equals(email.getText().toString())) {
+                        userAlreadyExists = true;
+                        addMembers(); // call addMembers() only after userExists() is complete
+                        return;
+                    }
+                }
+                Toast.makeText(AddingMembers.this, "User does not exist", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(AddingMembers.this, "Failure when checking the users", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void redirectToTeams(){
+        Intent intent = new Intent(AddingMembers.this, GetTeamMembers.class);
+        intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
+        startActivity(intent);
     }
 
 }
