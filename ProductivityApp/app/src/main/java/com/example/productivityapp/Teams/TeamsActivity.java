@@ -144,7 +144,7 @@ public class TeamsActivity extends AppCompatActivity {
 
                     //add project to the list of project items
                     assert teams != null;
-                    teamsItems.add(new ViewTeamsAdapter.TeamsItem(teams.getTeamName()));
+                    teamsItems.add(new ViewTeamsAdapter.TeamsItem(teams.getTeamName(), teams.getProjectName()));
 
                 }
 

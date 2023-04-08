@@ -46,6 +46,7 @@ public class AddingMembers extends AppCompatActivity {
         add = binding.add;
 
         team.setText(getIntent().getStringExtra("teamName"));
+        binding.autoCompleteTextView.setHint(getIntent().getStringExtra("projectName"));
 
         //get the current user
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -58,11 +59,7 @@ public class AddingMembers extends AppCompatActivity {
         currentProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
         userRef = FirebaseDatabase.getInstance().getReference("All Users").child("Emails");
 
-        //retrive the projects and set them as a dropdown
         retrieveProjects();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.team_project, projectList);
-        binding.autoCompleteTextView.setAdapter(arrayAdapter);
-
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

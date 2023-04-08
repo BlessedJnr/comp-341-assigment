@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.productivityapp.R;
@@ -49,6 +51,7 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
                     String teamName = mTeamItems.get(adapterPosition).getTeamName();
                     Intent intent = new Intent(context,GetTeamMembers.class);
                     intent.putExtra("teamName", teamName);
+                    intent.putExtra("projectName", teamsItem.getProjectName());
                     context.startActivity(intent);
                 }
             }
@@ -72,6 +75,7 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
 
     public static class TeamsItem {
         private String teamName = "";
+        private String projectName = "";
         private ArrayList<CreateTeams> teamsList = new ArrayList<CreateTeams>();
 
         public TeamsItem () {
@@ -80,6 +84,11 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
         }
         public TeamsItem(String mTeamName) {
             this.teamName = mTeamName;
+        }
+
+        public TeamsItem(String teamName, String projectName) {
+            this.teamName = teamName;
+            this.projectName = projectName;
         }
 
         public TeamsItem(String mTeamName, ArrayList<CreateTeams> teamsList) {
@@ -101,6 +110,14 @@ public class ViewTeamsAdapter extends RecyclerView.Adapter<ViewTeamsAdapter.View
 
         public void setTeamsList(ArrayList<CreateTeams> teamsList) {
             this.teamsList = teamsList;
+        }
+
+        public String getProjectName() {
+            return projectName;
+        }
+
+        public void setProjectName(String projectName) {
+            this.projectName = projectName;
         }
     }
 }

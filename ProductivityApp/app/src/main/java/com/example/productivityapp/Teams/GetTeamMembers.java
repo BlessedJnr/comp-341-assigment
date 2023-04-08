@@ -49,6 +49,7 @@ public class GetTeamMembers extends AppCompatActivity {
 
         binding.title.setText(getIntent().getStringExtra("teamName"));
 
+
         //setup the toolbar
         Toolbar toolbar = binding.memberstoolbar;
         setSupportActionBar(toolbar);
@@ -68,6 +69,7 @@ public class GetTeamMembers extends AppCompatActivity {
                 Toast.makeText(GetTeamMembers.this, "Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(GetTeamMembers.this, AddingMembers.class);
                 intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
+                intent.putExtra("projectName", getIntent().getStringExtra("projectName"));
                 startActivity(intent);
             }
         });
