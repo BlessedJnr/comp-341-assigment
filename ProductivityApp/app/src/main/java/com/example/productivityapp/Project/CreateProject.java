@@ -6,6 +6,7 @@ public class CreateProject {
 
     private String projectName;
     private ArrayList<CreateTasks> tasksList;
+    private Boolean collaborated = false;
 
     public CreateProject(){
         this.projectName="";
@@ -30,5 +31,13 @@ public class CreateProject {
 
     public void setTasksList(ArrayList<CreateTasks> tasksList) {
         this.tasksList = tasksList;
+    }
+
+    public Boolean getCollaborated() {
+        return collaborated;
+    }
+
+    public void setCollaborated(Boolean collaborated) {
+        this.collaborated = collaborated;
     }
 }
