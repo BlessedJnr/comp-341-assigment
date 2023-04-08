@@ -89,7 +89,7 @@ public class ProjectActivity extends AppCompatActivity {
             if (!text.isEmpty()) {
 
                 //Create a new project
-                CreateProject project = new CreateProject(text);
+                CreateProject project = new CreateProject(text, encodedEmail);
                 addToDatabase(project);
 
                 retrieveProject();
