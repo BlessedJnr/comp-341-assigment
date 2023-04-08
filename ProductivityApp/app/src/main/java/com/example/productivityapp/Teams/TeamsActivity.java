@@ -126,7 +126,8 @@ public class TeamsActivity extends AppCompatActivity {
         mRecylerView.setAdapter(mAdapter);
     }
     private void addToDatabase(CreateTeams teams) {
-        //push new project object
+        //push new team
+        makeProjectCollaborated();
         DatabaseReference newTeamRef = currentUserTeamRef.push();
         newTeamRef.setValue(teams);
     }
@@ -170,6 +171,34 @@ public class TeamsActivity extends AppCompatActivity {
                     //add project to the list of project items
                     assert project != null;
                     projectList.add(project.getProjectName());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void makeProjectCollaborated () {
+        //query for existing projects with the same name
+        currentProjectRef.orderByChild("projectName").equalTo(binding.autoCompleteTextView.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    //project with the same name already exists, show an error message
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                        CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+                        createProject.setCollaborated(true);
+
+                        //update the project in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                } else {
+                    //no project with the same name exists, add the new project
+
                 }
             }
 

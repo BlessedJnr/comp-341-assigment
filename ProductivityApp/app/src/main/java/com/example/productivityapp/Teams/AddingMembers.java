@@ -55,9 +55,11 @@ public class AddingMembers extends AppCompatActivity {
         String email = user.getEmail();
         String encodedEmail = email.replace(".", ",");
 
+        //get references to the databases
         teamMemberRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(encodedEmail).child("Teams");
         currentProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
         userRef = FirebaseDatabase.getInstance().getReference("All Users").child("Emails");
+
 
         retrieveProjects();
         add.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +82,7 @@ public class AddingMembers extends AppCompatActivity {
                     boolean memberExists = false;
 
                     int index = -1;
+
 
                     for (int i = 0 ; i < createTeams.getMembers().size(); i++) {
                         if (createTeams.getMembers().get(i).getEmail().equals(email.getText().toString())){
@@ -163,5 +166,7 @@ public class AddingMembers extends AppCompatActivity {
         intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
         startActivity(intent);
     }
+
+
 
 }
