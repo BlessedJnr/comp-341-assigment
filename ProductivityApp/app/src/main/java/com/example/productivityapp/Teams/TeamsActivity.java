@@ -6,16 +6,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.example.productivityapp.Project.CreateProject;
-import com.example.productivityapp.Project.ProjectAdapterClass;
 import com.example.productivityapp.databinding.ActivityTeamsBinding;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.firebase.auth.FirebaseAuth;
@@ -64,17 +59,23 @@ public class TeamsActivity extends AppCompatActivity {
         //get the teams
         createTeamCardList();
         buildRecylerView();
-        retrieveProject();
+        retrieveTeam();
 
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.teamsStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-        binding.floatingActionButton.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+        binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                binding.floatingActionButton.hide();
+            }
+        });
 
-        binding.teamsInputEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_SEND) {
+        binding.addTeam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String text = Objects.requireNonNull(binding.teamsInputEditText.getText()).toString();
-
                 if (!text.isEmpty()) {
 
                     //Create a new team
@@ -83,14 +84,17 @@ public class TeamsActivity extends AppCompatActivity {
 
                     binding.teamsInputEditText.setText("");
 
-                    retrieveProject();
-                    hideKeyboard();
+                    retrieveTeam();
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
+                    binding.floatingActionButton.show();
                 }
-                return true;
+                else {
+                    Toast.makeText(TeamsActivity.this, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                    binding.floatingActionButton.show();
+                }
             }
-            return false;
         });
     }
 
@@ -105,22 +109,13 @@ public class TeamsActivity extends AppCompatActivity {
         mAdapter = new ViewTeamsAdapter(teamsItems, TeamsActivity.this);
         mRecylerView.setAdapter(mAdapter);
     }
-
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     private void addToDatabase(CreateTeams teams) {
         //push new project object
         DatabaseReference newTeamRef = currentUserTeamRef.push();
         newTeamRef.setValue(teams);
     }
 
-    private void retrieveProject() {
+    private void retrieveTeam() {
         currentUserTeamRef.addValueEventListener(new ValueEventListener() {
 
             @Override
