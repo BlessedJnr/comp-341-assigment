@@ -52,8 +52,8 @@ public class AddingMembers extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         //get the user email
-        String email = user.getEmail();
-        String encodedEmail = email.replace(".", ",");
+        String userEmail = user.getEmail();
+        String encodedEmail = userEmail.replace(".", ",");
 
         //get references to the databases
         teamMemberRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(encodedEmail).child("Teams");
@@ -97,7 +97,8 @@ public class AddingMembers extends AppCompatActivity {
                         createTeams.getMembers().add(post);
                         DatabaseReference teamsRef = dataSnapshot.getRef();
                         teamsRef.setValue(createTeams);
-                        Toast.makeText(AddingMembers.this, "Added", Toast.LENGTH_SHORT).show();
+                        addProjectToMember();
+                        //Toast.makeText(AddingMembers.this, "Added", Toast.LENGTH_SHORT).show();
                     }
 
                     else {
@@ -165,6 +166,36 @@ public class AddingMembers extends AppCompatActivity {
         Intent intent = new Intent(AddingMembers.this, GetTeamMembers.class);
         intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
         startActivity(intent);
+    }
+    private void addProjectToMember () {
+        //query for existing projects with the same name
+        currentProjectRef.orderByChild("projectName").equalTo(getIntent().getStringExtra("projectName")).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    //project with the same name exists
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                        CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                        //remove the . in the member's email
+                        String memberEncodedEmail = email.getText().toString().replace(".", ",");
+                        Toast.makeText(AddingMembers.this, memberEncodedEmail, Toast.LENGTH_SHORT).show();
+                        //add the collaborated project to the members projects
+                        DatabaseReference memberRef = FirebaseDatabase.getInstance().getReference("Users").child(memberEncodedEmail).child("Projects");
+                        memberRef.push().setValue(createProject);
+                        break;
+                    }
+                } else {
+                    //no project with the same name exists
+                    Toast.makeText(AddingMembers.this, "No such project", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
