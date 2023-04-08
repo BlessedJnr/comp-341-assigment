@@ -7,9 +7,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -17,10 +23,17 @@ import android.widget.Toast;
 public class ProductivityWidget extends AppWidgetProvider {
 
     public static final String EXPAND_ACTION = "com.example.productivityapp.EXPAND_ACTION";
-    public static final String EXTRA_ITEM = "com.example.productivityapp.EXTRA_ITEM";
+    public static final String EXTRA_PROJECT = "com.example.productivityapp.EXTRA_ITEM";
     public static final String COLLAPSE_ACTION = "com.example.productivityapp.COLLAPSE_ACTION";
+    public static final String TOGGLE_STATE_ACTION = "com.example.productivityapp.TOGGLE_STATE_ACTION";
+    public static final String EXTRA_TASK = "com.example.productivityapp.EXTRA_TASK";
 
 
+    public static int selectedProject = -1;
+    public static List<CreateProject> projects;
+    public static List<CreateTasks> tasks1 = new ArrayList<>();
+    public static List<CreateTasks> tasks2 = new ArrayList<>();
+    public static List<CreateTasks> tasks3 = new ArrayList<>();
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -32,16 +45,20 @@ public class ProductivityWidget extends AppWidgetProvider {
         projectIntent.setData(Uri.parse(projectIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.widget_lv_projects, projectIntent);
 
-        //Rendering the list
-        Intent taskIntent = new Intent(context, TaskWidgetService.class);
-        taskIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        taskIntent.setData(Uri.parse(taskIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        taskIntent.putExtra("EXTRA_PROJECT_POSITION", 1);
-        views.setRemoteAdapter(R.id.widget_lv_tasks, taskIntent);
+        //Onclick intent to change status of task
+        Intent toggleStateIntent = new Intent(context, ProductivityWidget.class);
+        toggleStateIntent.setAction(TOGGLE_STATE_ACTION);
+        toggleStateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        toggleStateIntent.setData(Uri.parse(toggleStateIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        PendingIntent toggleStatePendingIntent = PendingIntent.getBroadcast(context, 0, toggleStateIntent, PendingIntent.FLAG_IMMUTABLE);
+        views.setPendingIntentTemplate(R.id.widget_lv_tasks, toggleStatePendingIntent);
+
 
         //Setting onclick to reshow projects
         Intent backIntent = new Intent(context, ProductivityWidget.class);
         backIntent.setAction(ProductivityWidget.COLLAPSE_ACTION);
+        backIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         PendingIntent backPendingIntent = PendingIntent.getBroadcast(context, 0, backIntent, PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.widget_btn_back, backPendingIntent);
 
@@ -74,15 +91,26 @@ public class ProductivityWidget extends AppWidgetProvider {
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
 
-            int viewIndex = intent.getIntExtra(EXTRA_ITEM, 0);
+            int viewIndex = intent.getIntExtra(EXTRA_PROJECT, 0);
             Toast.makeText(context, "Touched Project " + viewIndex, Toast.LENGTH_SHORT).show();
 
             //show task list and hide Projects
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.productivity_widget);
             views.setViewVisibility(R.id.widget_lv_projects, View.GONE);
             views.setViewVisibility(R.id.widget_tasks_container, View.VISIBLE);
+            selectedProject = viewIndex;
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), ProductivityWidget.class.getName());
 
+
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
+
+            //Rendering the list
+            Intent taskIntent = new Intent(context, TaskWidgetService.class);
+            taskIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+            taskIntent.setData(Uri.parse(taskIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            views.setRemoteAdapter(R.id.widget_lv_tasks, taskIntent);
 
             appWidgetManager.updateAppWidget(thisAppWidget, views);
         }
@@ -94,15 +122,47 @@ public class ProductivityWidget extends AppWidgetProvider {
             views.setViewVisibility(R.id.widget_tasks_container, View.GONE);
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), ProductivityWidget.class.getName());
 
-
             appWidgetManager.updateAppWidget(thisAppWidget, views);
         }
+
+        if(intent.getAction().equals(TOGGLE_STATE_ACTION)){
+            int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
+            int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
+
+
+            Toast.makeText(context, "Toggled Status of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
+
+        }
+
         super.onReceive(context, intent);
     }
 
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
+
+
+        projects = new ArrayList<>();
+        tasks1 = new ArrayList<>();
+        tasks2 = new ArrayList<>();
+        tasks3 = new ArrayList<>();
+
+        projects.add(new CreateProject("Proj 1"));
+        projects.add(new CreateProject("Proj 2"));
+        projects.add(new CreateProject("Proj 3"));
+
+        tasks1.add(new CreateTasks("Proj1","Baking", "Random Descri.", "21 Aug 2022", "completed" ));
+        tasks1.add(new CreateTasks());
+
+        tasks2.add(new CreateTasks());
+        tasks2.add(new CreateTasks());
+        tasks2.add(new CreateTasks());
+
+        tasks3.add(new CreateTasks("Proj3", "Slayin", "Another Desc", "10 Mar 2022","in progress" ));
+
+        projects.get(0).setTasksList((ArrayList<CreateTasks>) tasks1);
+        projects.get(1).setTasksList((ArrayList<CreateTasks>) tasks2);
+        projects.get(2).setTasksList((ArrayList<CreateTasks>) tasks3);
     }
 
     @Override
