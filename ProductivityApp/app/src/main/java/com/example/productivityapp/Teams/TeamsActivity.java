@@ -34,7 +34,7 @@ public class TeamsActivity extends AppCompatActivity {
     private List<ViewTeamsAdapter.TeamsItem> teamsItems;
     ActivityTeamsBinding binding;
     private FirebaseUser user;
-    DatabaseReference currentUserTeamRef, currentProjectRef;
+    DatabaseReference currentUserTeamRef, currentProjectRef, collaboratedProjects;
     private ArrayList<String> projectList = new ArrayList<>();
 
     @Override
@@ -53,7 +53,7 @@ public class TeamsActivity extends AppCompatActivity {
         //get other references to the real time database
         currentUserTeamRef = usersRef.child(encodedEmail).child("Teams");
         currentProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
-
+        collaboratedProjects = FirebaseDatabase.getInstance().getReference("Collaborated Teams");
 
         super.onCreate(savedInstanceState);
         binding = ActivityTeamsBinding.inflate(getLayoutInflater());
@@ -186,7 +186,7 @@ public class TeamsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    //project with the same name already exists, show an error message
+                    //project with the same name already exists
                     for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                         CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
                         createProject.setCollaborated(true);
@@ -194,10 +194,11 @@ public class TeamsActivity extends AppCompatActivity {
                         //update the project in the database
                         DatabaseReference projectRef = dataSnapshot.getRef();
                         projectRef.setValue(createProject);
+                        createCopyOfProject(createProject);
                         break;
                     }
                 } else {
-                    //no project with the same name exists, add the new project
+                    //no project with the same name exists
 
                 }
             }
@@ -207,6 +208,9 @@ public class TeamsActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    private void createCopyOfProject (CreateProject createProject) {
+        collaboratedProjects.child(createProject.getMainOwner()).push().setValue(createProject);
     }
 
 }
