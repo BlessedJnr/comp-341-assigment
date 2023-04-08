@@ -19,6 +19,12 @@ public class CreateTeams {
         this.members = new ArrayList<>();
         this.projectName = "";
     }
+
+    public CreateTeams(String teamName, String projectName) {
+        this.teamName = teamName;
+        this.projectName = projectName;
+    }
+
     public String getTeamName() {
         return teamName;
     }

@@ -90,10 +90,12 @@ public class TeamsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String text = Objects.requireNonNull(binding.teamsInputEditText.getText()).toString();
+                String selectedProject = binding.autoCompleteTextView.getText().toString();
+                Toast.makeText(TeamsActivity.this, selectedProject, Toast.LENGTH_SHORT).show();
                 if (!text.isEmpty()) {
 
                     //Create a new team
-                    CreateTeams team = new CreateTeams(text);
+                    CreateTeams team = new CreateTeams(text, selectedProject);
                     addToDatabase(team);
 
                     binding.teamsInputEditText.setText("");
