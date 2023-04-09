@@ -93,14 +93,12 @@ public class ProjectActivity extends AppCompatActivity {
                 CreateProject project = new CreateProject(text, encodedEmail);
                 addToDatabase(project);
 
-                updateProjects();
-                displayProjects();
-
                 inputEditText.setText("");
                 // Add a delay of 100ms before hiding the bottom sheet
                 new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
             }
         });
+
 
     }
 
@@ -271,26 +269,26 @@ public class ProjectActivity extends AppCompatActivity {
             }
         });
     }
-    private void displayProjects(){
-        projectItems.clear();
-        currentUserProjectRef.addValueEventListener(new ValueEventListener() {
+    private void displayProjects() {
 
+        currentUserProjectRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //clear the list of project items
-
+                projectItems.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    //get the project object from the snapshot
                     CreateProject project = dataSnapshot.getValue(CreateProject.class);
-                    projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
+                    if (project != null) {
+                        projectItems.add(new ProjectAdapterClass.ProjectItem(project.getProjectName()));
+                    }
                 }
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 }
