@@ -27,6 +27,7 @@ public class ProductivityWidget extends AppWidgetProvider {
     public static final String COLLAPSE_ACTION = "com.example.productivityapp.COLLAPSE_ACTION";
     public static final String TOGGLE_STATE_ACTION = "com.example.productivityapp.TOGGLE_STATE_ACTION";
     public static final String EXTRA_TASK = "com.example.productivityapp.EXTRA_TASK";
+    public static final String TOGGLE_DONE_ACTION = "com.example.productivityapp.TOGGLE_DONE_ACTION";
 
 
     public static int selectedProject = -1;
@@ -47,13 +48,22 @@ public class ProductivityWidget extends AppWidgetProvider {
 
         //Onclick intent to change status of task
         Intent toggleStateIntent = new Intent(context, ProductivityWidget.class);
-        toggleStateIntent.setAction(TOGGLE_STATE_ACTION);
+        toggleStateIntent.setAction(ProductivityWidget.TOGGLE_STATE_ACTION);
+
         toggleStateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         toggleStateIntent.setData(Uri.parse(toggleStateIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
-        PendingIntent toggleStatePendingIntent = PendingIntent.getBroadcast(context, 0, toggleStateIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent toggleStatePendingIntent = PendingIntent.getBroadcast(context, 0, toggleStateIntent, PendingIntent.FLAG_MUTABLE);
         views.setPendingIntentTemplate(R.id.widget_lv_tasks, toggleStatePendingIntent);
 
+        //Pending intent for toggle done
+        Intent toggleDoneIntent = new Intent(context, ProductivityWidget.class);
+        toggleDoneIntent.setAction(TOGGLE_DONE_ACTION);
+        toggleDoneIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        toggleDoneIntent.setData(Uri.parse(toggleDoneIntent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        PendingIntent toggleDonePendingIntent = PendingIntent.getBroadcast(context, 1, toggleDoneIntent, PendingIntent.FLAG_MUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_btn_done, toggleDonePendingIntent);
 
         //Setting onclick to reshow projects
         Intent backIntent = new Intent(context, ProductivityWidget.class);
@@ -129,9 +139,16 @@ public class ProductivityWidget extends AppWidgetProvider {
             int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
             int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
 
-
             Toast.makeText(context, "Toggled Status of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
 
+        }
+
+        if(intent.getAction().equals(TOGGLE_DONE_ACTION)){
+
+            int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
+            int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
+
+            Toast.makeText(context, "Toggled Done of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
         }
 
         super.onReceive(context, intent);
@@ -151,14 +168,14 @@ public class ProductivityWidget extends AppWidgetProvider {
         projects.add(new CreateProject("Proj 2"));
         projects.add(new CreateProject("Proj 3"));
 
-        tasks1.add(new CreateTasks("Proj1","Baking", "Random Descri.", "21 Aug 2022", "completed" ));
+        tasks1.add(new CreateTasks("Proj1","Baking", "Random Descri.", "24-Mar-2023", "complete" ));
         tasks1.add(new CreateTasks());
 
         tasks2.add(new CreateTasks());
         tasks2.add(new CreateTasks());
         tasks2.add(new CreateTasks());
 
-        tasks3.add(new CreateTasks("Proj3", "Slayin", "Another Desc", "10 Mar 2022","in progress" ));
+        tasks3.add(new CreateTasks("Proj3", "Slayin", "Another Desc", "10-Mar-2022","in progress" ));
 
         projects.get(0).setTasksList((ArrayList<CreateTasks>) tasks1);
         projects.get(1).setTasksList((ArrayList<CreateTasks>) tasks2);

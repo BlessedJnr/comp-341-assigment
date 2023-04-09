@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ProductivityApp"
         tools:targetApi="31">
+
+
         <receiver
             android:name=".ProductivityWidget"
             android:exported="false">
@@ -23,8 +29,12 @@
                 android:resource="@xml/productivity_widget_info" />
         </receiver>
 
-        <service android:name=".ProjectWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
-        <service android:name=".TaskWidgetService" android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <service
+            android:name=".ProjectWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <service
+            android:name=".TaskWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".MainActivity"
@@ -35,6 +45,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ProjectActivity"
+            android:exported="false" />
+
+        <receiver android:name=".NotificationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.productivityapp.DISPLAY_NOTIFICATION"/>
+            </intent-filter>
+        </receiver>
+        
+
     </application>
 
 </manifest>

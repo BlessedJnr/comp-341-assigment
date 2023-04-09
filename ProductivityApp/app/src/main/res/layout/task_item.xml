@@ -43,7 +43,7 @@
 
         <TextView
             android:id="@+id/widget_tv_taskstatus"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
@@ -54,7 +54,7 @@
 
         <TextView
             android:id="@+id/widget_tv_taskdue"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
