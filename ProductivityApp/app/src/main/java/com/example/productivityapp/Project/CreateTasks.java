@@ -1,8 +1,11 @@
 package com.example.productivityapp.Project;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateTasks {
 
@@ -10,13 +13,19 @@ public class CreateTasks {
     private String task = "Create task";
     private String description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
     private String state = "Pending";
-    private String dueDate = "01 Jan 2022";
+    private String dueDate = "01-Jan-2022";
+
+    private boolean isOverdue = false;
+    private boolean isInProgress = false;
+    private boolean isDone = false;
+    private int daysOverdue = 0;
 
     public CreateTasks () {
         this.task = "Create task";
         this.description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
         this.state = "Pending";
-        this.dueDate = "01 Jan 2022";
+        this.dueDate = "01-Jan-2022";
+        setOverdue();
     }
 
     public CreateTasks(String task, String project) {
@@ -24,6 +33,7 @@ public class CreateTasks {
         this.project = project;
         this.state = "Pending";
         this.dueDate = getCurrentDate();
+        setOverdue();
     }
 
     public CreateTasks(String mProject, String mTask, String desc, String dateDue, String mState){
@@ -32,6 +42,15 @@ public class CreateTasks {
         this.description = desc;
         this.dueDate = dateDue;
         this.state = mState;
+
+        setOverdue();
+
+        if(state.equalsIgnoreCase("In Progress")){
+            this.isInProgress = true;
+        }
+        if(state.equalsIgnoreCase("Complete")){
+            this.isDone = true;
+        }
     }
 
     public String getProject() {
@@ -82,6 +101,64 @@ public class CreateTasks {
         return date;
     }
 
+    public boolean isInProgress() {
+        return isInProgress;
+    }
+
+    public void setInProgress(boolean inProgress) {
+        isInProgress = inProgress;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
+    }
+
+    public boolean isOverdue() {
+        return isOverdue;
+    }
+
+    private void setOverdue() {
+        Calendar today = Calendar.getInstance();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dueDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.setTime(date);
+
+        if(today.after(dueDate)){
+            isOverdue = true;
+        }
+    }
+
+    public int getDaysOverdue() {
+
+        Calendar today = Calendar.getInstance();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+        Date date = null;
+        try {
+            date = dateFormat.parse(dueDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        Calendar dueDate = Calendar.getInstance();
+        dueDate.setTime(date);
+
+        int daysBetween = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            daysBetween = (int) ChronoUnit.DAYS.between(dueDate.toInstant(), today.toInstant());
+        }
+        return daysBetween;
+    }
 
 
 }
