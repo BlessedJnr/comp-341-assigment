@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityTeamsBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TeamsActivity extends AppCompatActivity {
+public class TeamsActivity extends BottomNavigationActivity {
 
     private ViewTeamsAdapter mAdapter;
     private List<ViewTeamsAdapter.TeamsItem> teamsItems;
@@ -70,6 +74,17 @@ public class TeamsActivity extends AppCompatActivity {
 
         //get all the projects
         retrieveProjects();
+
+        //handle bottom navigation clicks
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.more); // Set the selected item
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                navigateToActivity(item.getItemId());
+                return true;
+            }
+        });
 
         //add projects to dropdown menu
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.team_project, projectList);
