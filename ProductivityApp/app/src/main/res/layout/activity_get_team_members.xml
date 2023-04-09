@@ -61,8 +61,15 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     />
+                <include
+                    android:id="@+id/bottom_navigation"
+                    layout="@layout/activity_bottom_navigation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/recycler_view"
+                    android:layout_alignParentBottom="true"/>
 
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
@@ -75,7 +82,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="70dp"
         android:contentDescription="@string/fab_content_desc"
         app:srcCompat="@android:drawable/ic_input_add"
         style="?attr/floatingActionButtonLargeStyle"/>
@@ -94,13 +101,17 @@
             android:layout_height="wrap_content"
             />
 
-        <!--Bottom sheet contents -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/member_filled_textfield"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?attr/textInputFilledStyle"
-            android:hint="Team Member">
+            android:orientation="vertical">
+            <!--Bottom sheet contents -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/member_filled_textfield"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="?attr/textInputFilledStyle"
+                android:hint="Team Member">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_edit_text"
@@ -111,7 +122,20 @@
                 android:inputType="text"
                 android:maxLines="1"
                 />
-        </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/add_team_member"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@android:drawable/ic_input_add"
+                android:text="Create"
+                android:layout_gravity="right"
+                android:textSize="17sp"/>
+        </LinearLayout>
+
+
     </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

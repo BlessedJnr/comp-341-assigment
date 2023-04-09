@@ -8,12 +8,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
+import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityGetTeamMembersBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetTeamMembers extends AppCompatActivity {
+public class GetTeamMembers extends BottomNavigationActivity {
 
     ActivityGetTeamMembersBinding binding;
     private List<Post> memberItems;
@@ -63,10 +68,20 @@ public class GetTeamMembers extends AppCompatActivity {
         buildRecyclerView();
         retrieveMembers();
 
+        //handle bottom navigation clicks
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.more); // Set the selected item
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                navigateToActivity(item.getItemId());
+                return true;
+            }
+        });
+
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(GetTeamMembers.this, "Clicked", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(GetTeamMembers.this, AddingMembers.class);
                 intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
                 intent.putExtra("projectName", getIntent().getStringExtra("projectName"));
