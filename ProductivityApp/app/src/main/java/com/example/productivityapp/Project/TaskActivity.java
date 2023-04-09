@@ -18,10 +18,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityTaskBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class TaskActivity extends AppCompatActivity {
+public class TaskActivity extends BottomNavigationActivity {
 
     private ActivityTaskBinding binding;
     private TaskAdapter adapter;
@@ -81,6 +84,17 @@ public class TaskActivity extends AppCompatActivity {
 
         retrieveTasks();
 
+        //handle bottom navigation clicks
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.Projects); // Set the selected item
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                navigateToActivity(item.getItemId());
+                return true;
+            }
+        });
+
         //create a bottom-sheet and make it hidden
         BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(binding.taskStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -90,7 +104,11 @@ public class TaskActivity extends AppCompatActivity {
         taskTxt = binding.taskInputEditText;
 
 
-        addTask.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+        addTask.setOnClickListener(v -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            addTask.hide();
+            bottomNavigationView.setVisibility(View.GONE);
+        } );
 
         binding.createTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +122,8 @@ public class TaskActivity extends AppCompatActivity {
                     taskTxt.setText("");
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
+                    addTask.show();
+                    bottomNavigationView.setVisibility(View.VISIBLE);
                 }
 
             }
