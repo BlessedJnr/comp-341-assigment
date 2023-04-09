@@ -98,7 +98,6 @@ public class ProjectActivity extends BottomNavigationActivity {
         //display bottom sheet to add project
         addProject.setOnClickListener(v -> {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-            bottomNavigationView.setVisibility(View.GONE);
             addProject.hide();
         });
 
@@ -114,7 +113,6 @@ public class ProjectActivity extends BottomNavigationActivity {
                 inputEditText.setText("");
                 // Add a delay of 100ms before hiding the bottom sheet
                 new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
-                bottomNavigationView.setVisibility(View.VISIBLE);
                 addProject.show();
             }
         });

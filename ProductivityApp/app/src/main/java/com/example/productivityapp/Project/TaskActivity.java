@@ -107,7 +107,6 @@ public class TaskActivity extends BottomNavigationActivity {
         addTask.setOnClickListener(v -> {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             addTask.hide();
-            bottomNavigationView.setVisibility(View.GONE);
         } );
 
         binding.createTask.setOnClickListener(new View.OnClickListener() {
@@ -123,7 +122,6 @@ public class TaskActivity extends BottomNavigationActivity {
                     // Add a delay of 100ms before hiding the bottom sheet
                     new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
                     addTask.show();
-                    bottomNavigationView.setVisibility(View.VISIBLE);
                 }
 
             }
