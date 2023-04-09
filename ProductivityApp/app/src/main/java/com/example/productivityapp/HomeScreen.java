@@ -25,13 +25,17 @@ import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeScreen extends BottomNavigationActivity {
@@ -49,6 +53,17 @@ public class HomeScreen extends BottomNavigationActivity {
         binding = ActivityHomeScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        //firebase
+        //get the currently logged in user name
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+        String email = user.getEmail();
+        assert email != null;
+        String encodedEmail = email.replace(".", ",");
+        currentUserProjectRef = usersRef.child(encodedEmail).child("Projects");
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.home); // Set the selected item
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -58,6 +73,10 @@ public class HomeScreen extends BottomNavigationActivity {
                 return true;
             }
         });
+
+        createProjectCardList();
+        buildRecyclerView();
+        displayProjects();
 
 
 
@@ -75,7 +94,7 @@ public class HomeScreen extends BottomNavigationActivity {
 
     private void displayProjects() {
 
-        currentUserProjectRef.orderByChild("lastModified").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+        currentUserProjectRef.orderByChild("lastModified").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 projectItems.clear();
@@ -85,6 +104,7 @@ public class HomeScreen extends BottomNavigationActivity {
                         projectItems.add(new RecentProjectsAdapter.ProjectItem(project.getProjectName()));
                     }
                 }
+                Collections.reverse(projectItems); // sort by most recent
                 mAdapter.notifyDataSetChanged();
             }
 
