@@ -38,7 +38,7 @@ public class ViewMembersAdapter extends RecyclerView.Adapter<ViewMembersAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post memberList1 = memberList.get(position);
-        holder.mTextView.setText(memberList1.getEmail());
+        holder.mTextView.setText(memberList1.getName());
 
         //set constraints for the card item view
 

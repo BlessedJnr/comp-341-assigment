@@ -35,6 +35,7 @@ public class AddingMembers extends AppCompatActivity {
     private ArrayList<String> projectList = new ArrayList<>();
     private boolean userAlreadyExists = false;
     private boolean isOwner = true;
+    private String userName = "";
     String encodedEmail;
 
     @Override
@@ -73,6 +74,14 @@ public class AddingMembers extends AppCompatActivity {
 
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
     private void addMembers() {
 
         teamMemberRef.orderByChild("teamName").equalTo(team.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -95,7 +104,7 @@ public class AddingMembers extends AppCompatActivity {
                     }
 
                     if (index == -1 && userAlreadyExists){
-                        Post post = new Post(email.getText().toString());
+                        Post post = new Post(getUserName(),email.getText().toString());
 
                         addProjectToMember();
                         Toast.makeText(AddingMembers.this, "" + isOwner, Toast.LENGTH_SHORT).show();
@@ -152,6 +161,7 @@ public class AddingMembers extends AppCompatActivity {
                     CreateUser createUser = dataSnapshot.getValue(CreateUser.class);
 
                     if (createUser.getEmail().equals(email.getText().toString())) {
+                        setUserName(createUser.getName());
                         userAlreadyExists = true;
                         addMembers(); // call addMembers() only after userExists() is complete
                         return;
