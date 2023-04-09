@@ -16,10 +16,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityProjectBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ProjectActivity extends AppCompatActivity {
+public class ProjectActivity extends BottomNavigationActivity {
 
     private ProjectAdapterClass mAdapter;
     private List<ProjectAdapterClass.ProjectItem> projectItems;
@@ -77,12 +80,27 @@ public class ProjectActivity extends AppCompatActivity {
         FloatingActionButton addProject = binding.floatingActionButton;
         inputEditText = binding.textInputEditText;
 
+        //handle bottom navigation clicks
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.Projects); // Set the selected item
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                navigateToActivity(item.getItemId());
+                return true;
+            }
+        });
+
         //create bottom sheet ans
         BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(binding.projectStandardBtmSheet);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
         //display bottom sheet to add project
-        addProject.setOnClickListener(v -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+        addProject.setOnClickListener(v -> {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            bottomNavigationView.setVisibility(View.GONE);
+            addProject.hide();
+        });
 
         binding.addProject.setOnClickListener(v -> {
             String text = Objects.requireNonNull(inputEditText.getText()).toString();
@@ -96,6 +114,8 @@ public class ProjectActivity extends AppCompatActivity {
                 inputEditText.setText("");
                 // Add a delay of 100ms before hiding the bottom sheet
                 new Handler().postDelayed(() -> bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN), 100);
+                bottomNavigationView.setVisibility(View.VISIBLE);
+                addProject.show();
             }
         });
 

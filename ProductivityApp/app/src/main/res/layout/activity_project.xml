@@ -64,13 +64,23 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+
                         />
+                    <include
+                        android:id="@+id/bottom_navigation"
+                        layout="@layout/activity_bottom_navigation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/recycler_view"
+                        android:layout_alignParentBottom="true"/>
 
                 </RelativeLayout>
 
 
+
         </androidx.core.widget.NestedScrollView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,6 +94,7 @@
         app:srcCompat="@android:drawable/ic_input_add"
         style="?attr/floatingActionButtonLargeStyle"
         android:layout_marginBottom="70dp"/>
+
 
     <FrameLayout
         android:id="@+id/project_standard_btm_sheet"
