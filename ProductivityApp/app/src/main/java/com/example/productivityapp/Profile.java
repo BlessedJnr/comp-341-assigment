@@ -45,7 +45,6 @@ public class Profile extends AppCompatActivity {
             binding.editbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(Profile.this, "Clicked", Toast.LENGTH_SHORT).show();
                     binding.usernameinput.setEnabled(true);
                 }
             });

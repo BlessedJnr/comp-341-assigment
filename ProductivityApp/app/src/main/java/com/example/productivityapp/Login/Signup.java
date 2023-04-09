@@ -67,7 +67,7 @@ public class Signup extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null){
-            Toast.makeText(this, "User already exists", Toast.LENGTH_SHORT).show();
+            binding.emailinput.setError("User already exists");
         }
         else {
             mAuth.createUserWithEmailAndPassword(email, password)
@@ -75,7 +75,6 @@ public class Signup extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(Signup.this, "Sign Up successfull", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(username)

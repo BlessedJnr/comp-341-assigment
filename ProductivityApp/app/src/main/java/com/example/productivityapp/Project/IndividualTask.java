@@ -113,7 +113,6 @@ public class IndividualTask extends AppCompatActivity {
         });
 
         descInputTxt.setOnClickListener(v -> {
-            Toast.makeText(getApplicationContext(), "Description", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(IndividualTask.this, EditDescriptionActivity.class);
             intent.putExtra("taskName", taskName);
             intent.putExtra("projectName", projectName);
@@ -145,7 +144,6 @@ public class IndividualTask extends AppCompatActivity {
 
         switch (id){
             case R.id.taskDelete:
-                Toast.makeText(getApplicationContext(), "Delete Clicked", Toast.LENGTH_SHORT).show();
                 deleteDatabaseTask();
                 openTaskActivity();
                 return true;
@@ -250,7 +248,6 @@ public class IndividualTask extends AppCompatActivity {
                             if (task.getTask().equals(taskName)) {
                                 createProject.getTasksList().remove(task);
                                 dataSnapshot.getRef().setValue(createProject);
-                                Toast.makeText(getApplicationContext(), "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         }

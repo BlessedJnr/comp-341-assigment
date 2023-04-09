@@ -161,7 +161,6 @@ public class TaskActivity extends BottomNavigationActivity {
 
         switch (id) {
             case R.id.project_delete:
-                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 deleteProject();
                 openProjectsActivity();
                 return true;

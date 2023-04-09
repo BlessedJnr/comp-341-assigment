@@ -11,7 +11,7 @@ public class CreateTasks {
 
     private String project = "project name";
     private String task = "Create task";
-    private String description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+    private String description = "Some sample Description";
     private String state = "Pending";
     private String dueDate = "01-Jan-2022";
 
@@ -22,7 +22,7 @@ public class CreateTasks {
 
     public CreateTasks () {
         this.task = "Create task";
-        this.description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+        this.description = "Some sample Description";
         this.state = "Pending";
         this.dueDate = "01-Jan-2022";
         setOverdue();

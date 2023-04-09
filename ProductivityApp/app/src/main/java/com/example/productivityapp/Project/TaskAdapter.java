@@ -91,7 +91,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             public void onClick(View v) {
                 int adapterPosition = holder.getAdapterPosition();;
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent (context, IndividualTask.class);
                     String taskName = mTaskList.get(adapterPosition).getTask();
                     intent.putExtra("taskName", taskName);
