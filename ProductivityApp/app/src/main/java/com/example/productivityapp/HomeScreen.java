@@ -14,19 +14,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
 import com.example.productivityapp.Project.ProjectActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 
-public class HomeScreen extends AppCompatActivity {
+public class HomeScreen extends BottomNavigationActivity {
     TextView textView;
 
     RecyclerView recyclerView;
     ArrayList<String> projectName,tasks, team;
     MyAdapter adapter;
-    private BottomNavigationView bottomNavigationView;
 
     Toolbar toolbar;
     @Override
@@ -49,30 +49,17 @@ public class HomeScreen extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         displaydata();
 
-
-        bottomNavigationView = findViewById(R.id.bottomNavigationView2);
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.home); // Set the selected item
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.home:
-                        Toast.makeText(HomeScreen.this, "Home selected", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.Projects:
-                        Intent intent = new Intent(HomeScreen.this, ProjectActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.notifications:
-                        Toast.makeText(HomeScreen.this, "Notifications selected", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.more:
-                        Toast.makeText(HomeScreen.this, "More selected", Toast.LENGTH_SHORT).show();
-                        break;
-                }
+                navigateToActivity(item.getItemId());
                 return true;
             }
         });
+
+
 
     }
 

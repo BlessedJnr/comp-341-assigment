@@ -60,7 +60,9 @@
             android:parentActivityName=".Teams.TeamsActivity"/>
         <activity
             android:name=".HomeScreen"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Navigation.BottomNavigationActivity"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
