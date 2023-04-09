@@ -279,7 +279,6 @@ public class TaskActivity extends AppCompatActivity {
             }
         });
     }
-
     private void updateCollaborated(CreateProject updatedProject) {
         DatabaseReference collaboratedProjectRef = FirebaseDatabase.getInstance().getReference("Collaborated Teams").child(updatedProject.getMainOwner());
         collaboratedProjectRef.orderByChild("projectName").equalTo(updatedProject.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
