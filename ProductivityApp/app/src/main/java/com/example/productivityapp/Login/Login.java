@@ -10,15 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.productivityapp.HomeScreen;
 import com.example.productivityapp.MainActivity;
-import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
@@ -62,7 +61,7 @@ public class Login extends AppCompatActivity {
         //check if user is signed in (non null) and update it accordingly
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            startMain();
+            startHome();
         }
     }
 
@@ -93,7 +92,7 @@ public class Login extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                startMain();
+                                startHome();
                             }
                             else {
                                 Toast.makeText(Login.this, "Authentication failed.",
@@ -105,8 +104,8 @@ public class Login extends AppCompatActivity {
 
 
     }
-    private void startMain () {
-        Intent intent = new Intent(Login.this, MainActivity.class);
+    private void startHome() {
+        Intent intent = new Intent(Login.this, HomeScreen.class);
         startActivity(intent);
     }
 

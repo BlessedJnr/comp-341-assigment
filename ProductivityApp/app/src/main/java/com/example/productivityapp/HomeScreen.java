@@ -34,8 +34,6 @@ public class HomeScreen extends BottomNavigationActivity {
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.activity_home_screen);
-        textView = findViewById(R.id.textView);
-        textView.setText("Home");
 
 
         projectName = new ArrayList<>();
@@ -47,7 +45,6 @@ public class HomeScreen extends BottomNavigationActivity {
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        displaydata();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.home); // Set the selected item
@@ -63,10 +60,6 @@ public class HomeScreen extends BottomNavigationActivity {
 
     }
 
-    private void displaydata() {
-        projectName.add("ProductivityApp");
-        tasks.add("Wireframes,Research");
-        team.add("Tawidza");
-    }
+
 
 }
