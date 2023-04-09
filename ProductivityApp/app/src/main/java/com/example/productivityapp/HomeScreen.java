@@ -2,6 +2,7 @@ package com.example.productivityapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,36 +16,38 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.example.productivityapp.Navigation.BottomNavigationActivity;
+import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.ProjectActivity;
+import com.example.productivityapp.Project.ProjectAdapterClass;
+import com.example.productivityapp.Teams.RecentProjectsAdapter;
+import com.example.productivityapp.databinding.ActivityHomeScreenBinding;
+import com.example.productivityapp.databinding.ActivityProjectBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HomeScreen extends BottomNavigationActivity {
-    TextView textView;
 
-    RecyclerView recyclerView;
-    ArrayList<String> projectName,tasks, team;
-    MyAdapter adapter;
+    private RecentProjectsAdapter mAdapter;
+    private List<RecentProjectsAdapter.ProjectItem> projectItems;
+    private ActivityHomeScreenBinding binding;
+    private TextInputEditText inputEditText;
 
-    Toolbar toolbar;
+    private FirebaseUser user;
+    DatabaseReference currentUserProjectRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        setContentView(R.layout.activity_home_screen);
-
-
-        projectName = new ArrayList<>();
-        tasks = new ArrayList<>();
-        team = new ArrayList<>();
-        recyclerView = findViewById(R.id.recyclerView);
-
-        adapter = new MyAdapter(this, projectName,tasks,team);
-
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding = ActivityHomeScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.home); // Set the selected item
@@ -59,6 +62,39 @@ public class HomeScreen extends BottomNavigationActivity {
 
 
     }
+    private void createProjectCardList() {
+        projectItems = new ArrayList<>();
+    }
+    private void buildRecyclerView() {
+        RecyclerView mRecyclerView = binding.recyclerView;
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
+        mAdapter = new RecentProjectsAdapter(projectItems, HomeScreen.this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void displayProjects() {
+
+        currentUserProjectRef.orderByChild("lastModified").startAt(System.currentTimeMillis()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                projectItems.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject project = dataSnapshot.getValue(CreateProject.class);
+                    if (project != null) {
+                        projectItems.add(new RecentProjectsAdapter.ProjectItem(project.getProjectName()));
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
 

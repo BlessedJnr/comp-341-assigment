@@ -1,0 +1,114 @@
+package com.example.productivityapp.Teams;
+
+import android.content.Context;
+import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.productivityapp.HomeScreen;
+import com.example.productivityapp.Project.TaskActivity;
+import com.example.productivityapp.R;
+
+import java.util.List;
+
+public class RecentProjectsAdapter extends RecyclerView.Adapter<RecentProjectsAdapter.ViewHolder> {
+
+    private List<RecentProjectsAdapter.ProjectItem> mProjectItems;
+    Context context;
+
+    public RecentProjectsAdapter(List<RecentProjectsAdapter.ProjectItem> mProjectItems, HomeScreen activity) {
+        this.mProjectItems = mProjectItems;
+        this.context = activity;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.project_card_item, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        RecentProjectsAdapter.ProjectItem projectItem = mProjectItems.get(position);
+        holder.mTextView.setText(projectItem.getText());
+
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
+
+        int margin = 10;
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        layoutParams.topMargin = margin;
+        layoutParams.bottomMargin = margin;
+        holder.itemView.setLayoutParams(layoutParams);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                int adapterPosition = holder.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    String projectName = mProjectItems.get(adapterPosition).getText();
+                    Intent intent = new Intent(context, TaskActivity.class);
+                    intent.putExtra("projectName", projectName);
+                    intent.putExtra("collaborated", projectItem.isCollaborated());
+                    context.startActivity(intent);
+                }
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount(){
+        return mProjectItems.size();
+    }
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+
+        public TextView mTextView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mTextView = itemView.findViewById(R.id.project_card_title);
+        }
+
+
+    }
+
+    public static class ProjectItem {
+        private String mText;
+        private boolean collaborated = false;
+
+        public ProjectItem () {
+            this.mText = "";
+        }
+
+        public ProjectItem (String text) {
+            mText = text;
+        }
+
+        public ProjectItem(String mText, boolean collaborated) {
+            this.mText = mText;
+            this.collaborated = collaborated;
+        }
+
+        public String getText(){
+            return mText;
+        }
+
+        public void setText(String mText) {
+            this.mText = mText;
+        }
+        public boolean isCollaborated() {
+            return collaborated;
+        }
+
+        public void setCollaborated(boolean collaborated) {
+            this.collaborated = collaborated;
+        }
+    }
+}
+

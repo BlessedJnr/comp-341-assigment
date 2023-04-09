@@ -9,6 +9,11 @@ public class CreateProject {
     private Boolean collaborated = false;
     private String mainOwner;
 
+    private String teamName;
+    private Long lastModified;
+
+
+
     public CreateProject(){
         this.projectName="";
         this.tasksList = new ArrayList<>();
@@ -53,5 +58,21 @@ public class CreateProject {
 
     public void setMainOwner(String mainOwner) {
         this.mainOwner = mainOwner;
+    }
+
+    public Long getLastModified() { // new getter method for the timestamp
+        return lastModified;
+    }
+
+    public void setLastModified(Long lastModified) { // new setter method for the timestamp
+        this.lastModified = lastModified;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 }
