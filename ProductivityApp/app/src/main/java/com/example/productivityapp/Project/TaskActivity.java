@@ -172,7 +172,7 @@ public class TaskActivity extends AppCompatActivity {
         }
     }
     private void addToDatabase(String taskName, String projectName) {
-        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addValueEventListener(new ValueEventListener() {
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
@@ -190,7 +190,10 @@ public class TaskActivity extends AppCompatActivity {
                     //add the new task to the tasksList of the CreateProject object if it doesn't already exist
                     if (!taskExists) {
                         createProject.getTasksList().add(new CreateTasks(taskName,projectName));
-
+                        //update all references of the collaborated project
+                        if (createProject.getCollaborated()){
+                            updateCollaborated(createProject);
+                        }
                         //update the CreateProject object in the database
                         DatabaseReference projectRef = dataSnapshot.getRef();
                         projectRef.setValue(createProject);
@@ -273,6 +276,29 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(TaskActivity.this, "Failed to delete project", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateCollaborated(CreateProject updatedProject) {
+        DatabaseReference collaboratedProjectRef = FirebaseDatabase.getInstance().getReference("Collaborated Teams").child(updatedProject.getMainOwner());
+        collaboratedProjectRef.orderByChild("projectName").equalTo(updatedProject.getProjectName()).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //clear the list of project items
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    //get the project object from the snapshot
+                    DatabaseReference projectRef = dataSnapshot.getRef();
+                    projectRef.setValue(updatedProject);
+                    break;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
