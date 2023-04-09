@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -219,6 +220,7 @@ public class IndividualTask extends AppCompatActivity {
                     }
                     if (index != -1) {
                         CreateTasks updatedTask = new CreateTasks(projectName, task, desc, date, state);
+                        createProject.setLastModified(new Date().getTime());
                         createProject.getTasksList().set(index, updatedTask);
 
                         //update the CreateProject object in the database

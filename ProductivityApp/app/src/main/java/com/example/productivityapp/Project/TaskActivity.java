@@ -36,6 +36,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -207,6 +208,7 @@ public class TaskActivity extends BottomNavigationActivity {
                     }
                     //add the new task to the tasksList of the CreateProject object if it doesn't already exist
                     if (!taskExists) {
+                        createProject.setLastModified(new Date().getTime());
                         createProject.getTasksList().add(new CreateTasks(taskName,projectName));
                         //update all references of the collaborated project
                         if (createProject.getCollaborated()){
