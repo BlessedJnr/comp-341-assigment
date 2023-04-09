@@ -15,4 +15,9 @@
     <string name="desc_two">Stay up-to-date with instant notifications - receive real-time updates and important information as they happen, so you never miss a beat</string>
     <string name="desc_three">Collaborate effortlessly with your team members - assign tasks, share ideas,and get things done efficiently</string>
     <string name="desc_fourth">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="channel_name">Productivity Notifications</string>
+    <string name="channel_description">Notifies user about project tasks due and past due</string>
 </resources>
