@@ -1,13 +1,8 @@
 package com.example.productivityapp;
 
 
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,11 +12,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPag;
     LinearLayout linearLayout;
-    Button skip,getStarted;
-
+    Button skip, getStarted;
     TextView[] dots;
     ViewPageAdapter viewPageAdapter;
     boolean isFirstLaunch = true;
@@ -31,9 +28,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-       getStarted = findViewById(R.id.getStarted);
+        getStarted = findViewById(R.id.getStarted);
         getStarted.setVisibility(View.GONE);
-       // next = findViewById(R.id.next);
+        // next = findViewById(R.id.next);
         skip = findViewById(R.id.skip);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstLaunch = ((SharedPreferences) sharedPreferences).getBoolean("isFirstLaunch", true);
@@ -48,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
         getStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,22 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
-        /*
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(getItem(0)< 2){
-                    viewPag.setCurrentItem((1), true);
-                }
-                else{
-                    Intent i = new Intent(MainActivity.this, HomeScreen.class);
-                    startActivity(i);
-                    finish();
-                }
-            }
-        });
-
- */
 
 
         skip.setOnClickListener(new View.OnClickListener() {
@@ -91,10 +71,11 @@ public class MainActivity extends AppCompatActivity {
         setIndicatotr(0);
         viewPag.addOnPageChangeListener(viewListener);
     }
-    public void setIndicatotr(int position){
-        dots= new TextView[3];
+
+    public void setIndicatotr(int position) {
+        dots = new TextView[3];
         linearLayout.removeAllViews();
-        for (int i  = 0; i < dots.length; i++){
+        for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
             dots[i].setText(Html.fromHtml("&#8226"));
             dots[i].setTextSize(35);
@@ -105,9 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            dots[position].setTextColor(getResources().getColor(R.color.active,getApplicationContext().getTheme()));
+            dots[position].setTextColor(getResources().getColor(R.color.active, getApplicationContext().getTheme()));
         }
     }
+
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -117,12 +99,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             setIndicatotr(position);
-            if(position == 2 ){
-              getStarted.setVisibility(View.VISIBLE);
+            if (position == 2) {
+                getStarted.setVisibility(View.VISIBLE);
 
-            }
-            else{
-             getStarted.setVisibility(View.INVISIBLE);
+            } else {
+                getStarted.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -131,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-    private int getItem(int i){
+
+    private int getItem(int i) {
 
         return viewPag.getCurrentItem() + i;
     }
