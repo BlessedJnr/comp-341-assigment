@@ -3,13 +3,16 @@ package com.example.productivityapp.Project;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productivityapp.R;
@@ -58,6 +61,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.taskName.setText(tasks.getTask());
         holder.taskDueDate.setText(tasks.getDueDate());
 
+
         //convert due date to calendar object
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
         Date taskDate = null;
@@ -75,6 +79,20 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         if (calendar.before(currentCalendar)){
             holder.taskDueDate.setTextColor(Color.parseColor("#bf1919"));
+
+        }
+
+        //check if task is done
+        if (tasks.getState().equals("Complete")){
+            holder.checkTask.setChecked(true);
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.disabled));
+            holder.cardView.setAlpha(0.7f);
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+        }
+
+        else {
+            holder.checkTask.setChecked(false);
         }
 
         // Set constraints for the card item view
@@ -109,11 +127,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public static class ViewHolder extends  RecyclerView.ViewHolder {
         private TextView taskName;
         private TextView taskDueDate;
+        private CheckBox checkTask;
 
+        private MaterialCardView cardView;
         public ViewHolder (View itemView){
             super(itemView);
             taskName = itemView.findViewById(R.id.task_name);
             taskDueDate = itemView.findViewById(R.id.task_due);
+            checkTask = itemView.findViewById(R.id.check_task);
+            cardView = itemView.findViewById(R.id.card);
         }
 
     }
@@ -121,6 +143,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public static class MyTasks {
         private String taskName = "";
         private String taskDueDate = "";
+        private String taskState = "pending";
 
         public MyTasks () {
 
@@ -128,12 +151,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         public MyTasks(String name){
             this.taskName = name;
-            taskDueDate = "";
+            this.taskDueDate = "";
+            this.taskState = "pending";
         }
 
         public MyTasks (String name, String due){
             this.taskName = name;
             this.taskDueDate = due;
+            this.taskState = "pending";
         }
         public String getTaskName() {
             return taskName;
@@ -146,6 +171,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
         public void setTaskDueDate(String taskDueDate) {
             this.taskDueDate = taskDueDate;
+        }
+        public String getTaskState() {
+            return taskState;
+        }
+        public void setTaskState(String taskState) {
+            this.taskState = taskState;
         }
     }
 }

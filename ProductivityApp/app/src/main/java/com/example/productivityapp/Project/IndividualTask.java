@@ -210,7 +210,6 @@ public class IndividualTask extends AppCompatActivity {
 
                     for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
                         if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
-                            Toast.makeText(getApplicationContext(), createProject.getTasksList().get(i).getTask() + ": " + i, Toast.LENGTH_SHORT).show();
                             taskName = task;
                             index = i;
                             break;

@@ -68,6 +68,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="disabled">#868D9B</color>
     colors.txt
     //onboarding colors
     <color name="background">#F0F4F3</color>
