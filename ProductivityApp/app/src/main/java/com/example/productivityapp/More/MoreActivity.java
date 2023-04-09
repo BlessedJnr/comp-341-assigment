@@ -1,23 +1,29 @@
 package com.example.productivityapp.More;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.productivityapp.Login.Login;
+import com.example.productivityapp.Navigation.BottomNavigationActivity;
 import com.example.productivityapp.Profile;
+import com.example.productivityapp.R;
 import com.example.productivityapp.Teams.ManageTeams;
 import com.example.productivityapp.Teams.TeamsActivity;
 import com.example.productivityapp.databinding.ActivityMoreBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class MoreActivity extends AppCompatActivity {
+public class MoreActivity extends BottomNavigationActivity {
 
     private Button teamsBtn;
     private  Button logoutbtn;
@@ -69,9 +75,16 @@ public class MoreActivity extends AppCompatActivity {
             usernameTxt.setText(name);
         }
 
-
-
-
+        //handle bottom navigation clicks
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.more); // Set the selected item
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                navigateToActivity(item.getItemId());
+                return true;
+            }
+        });
 
 
     }
