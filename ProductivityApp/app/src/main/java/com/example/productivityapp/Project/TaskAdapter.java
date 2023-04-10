@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,38 +74,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         holder.taskDueDate.setText(tasks.getDueDate());
 
 
-        //convert due date to calendar object
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        Date taskDate = null;
-        try {
-            taskDate = dateFormat.parse(tasks.getDueDate());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(taskDate);
-
-        //check if overdue
-        Calendar currentCalendar = Calendar.getInstance();
-
-        //when overdue
-        if (calendar.before(currentCalendar)){
-            holder.taskDueDate.setTextColor(Color.parseColor("#bf1919"));
-
-        }
-        else {
-            //for when task is due in 24 hours
-            currentCalendar.add(Calendar.HOUR, 24);
-            if (calendar.before(currentCalendar) && !tasks.isNotified()) {
-                addNotification(tasks.getTask(), "due 24 hours");
-                popUpNotification(tasks.getTask(), "due in 24 hours");
-                updateDatabaseNotified(tasks.getTask(), true);
-            }
-            else if (calendar.after(currentCalendar) && tasks.isNotified()) {
-                updateDatabaseNotified(tasks.getTask(), false);
-            }
-        }
 
         //check if task is done
         if (tasks.getState().equals("Complete")){
@@ -112,11 +82,42 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.disabled));
             holder.cardView.setAlpha(0.7f);
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-
         }
 
         else {
             holder.checkTask.setChecked(false);
+
+            //convert due date to calendar object
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            Date taskDate = null;
+            try {
+                taskDate = dateFormat.parse(tasks.getDueDate());
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(taskDate);
+
+            //check if overdue
+            Calendar currentCalendar = Calendar.getInstance();
+
+            //when overdue
+            if (calendar.before(currentCalendar)){
+                holder.taskDueDate.setTextColor(Color.parseColor("#bf1919"));
+
+            }
+            else {
+                currentCalendar.add(Calendar.HOUR, 24);
+                if (calendar.before(currentCalendar) && !tasks.isNotified()) {
+                    addNotification(tasks.getTask(), "due 24 hours");
+                    popUpNotification(tasks.getTask(), "due in 24 hours");
+                    updateDatabaseNotified(tasks.getTask(), true);
+                }
+                else if (calendar.after(currentCalendar) && tasks.isNotified()) {
+                    updateDatabaseNotified(tasks.getTask(), false);
+                }
+            }
         }
 
         // Set constraints for the card item view
@@ -269,7 +270,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         });
     }
 
-    private void addNotification (String task, String notification){
+    private void addNotification(String task, String notification) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String encodedEmail = user.getEmail().replace(".", ",");
         DatabaseReference currentInboxProjectRef = FirebaseDatabase.getInstance().getReference("Notifications").child(encodedEmail).child("Inboxes");
@@ -277,9 +278,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         currentInboxProjectRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (notification.equals("due 24 hours")){
+                if (notification.equals("due 24 hours")) {
+                    CreateInboxNotifications inboxNotification = new CreateInboxNotifications();
+                    String uniqueId = task + "_" + inboxNotification.getTimeStamp();
                     CreateInboxNotifications inboxNotifications = new CreateInboxNotifications("Task due", task + " is due in 24 hours");
-                    currentInboxProjectRef.push().setValue(inboxNotifications);
+
+                    boolean isNewNotification = true;
+                    for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                        CreateInboxNotifications existingNotification = childSnapshot.getValue(CreateInboxNotifications.class);
+                        if (existingNotification != null && existingNotification.getUniqueId().equals(uniqueId) && existingNotification.getMessageBody().equals("task")) {
+                            isNewNotification = false;
+                            break;
+                        }
+                    }
+
+                    if (isNewNotification) {
+                        currentInboxProjectRef.push().setValue(inboxNotifications);
+                    }
                 }
             }
 
@@ -289,6 +304,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             }
         });
     }
+
     //keep track of notified tasks
     private void updateDatabaseNotified(String taskName, boolean notified) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();

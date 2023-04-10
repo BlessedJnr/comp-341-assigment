@@ -8,17 +8,20 @@ public class CreateInboxNotifications {
     private String messageSubject;
     private String messageBody;
     private String timeStamp;
+    private String uniqueId;
 
     public CreateInboxNotifications() {
         this.messageSubject = "";
         this.messageBody ="";
         this.timeStamp = "";
+        setTimeStamp();
     }
 
     public CreateInboxNotifications(String messageSubject, String messageBody) {
         this.messageSubject = messageSubject;
         this.messageBody = messageBody;
         setTimeStamp();
+        uniqueId = messageBody + "_" + getTimeStamp();
     }
 
     public String getMessageSubject() {
@@ -52,5 +55,13 @@ public class CreateInboxNotifications {
 
     public String getTimeStamp() {
         return timeStamp;
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 }
