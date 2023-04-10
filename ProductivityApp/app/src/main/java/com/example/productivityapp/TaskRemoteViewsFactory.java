@@ -84,8 +84,11 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
         views.setTextViewText(R.id.widget_tv_taskstatus, tasks.get(i).getState());
         views.setTextViewText(R.id.widget_tv_taskdue, tasks.get(i).getDueDate());
 
+        String state =  tasks.get(i).isDone() ? "complete" : (tasks.get(i).isInProgress() ? "In progress" : "pending");
+
         int progressImg = tasks.get(i).isInProgress() ? R.drawable.ic_toggle_on : R.drawable.ic_toggle_off;
         int doneImg = tasks.get(i).isDone() ? R.drawable.ic_undo_done : R.drawable.ic_done;
+        views.setTextViewText(R.id.widget_tv_taskstatus, state);
 
         views.setImageViewResource(R.id.widget_btn_toggle, progressImg);
         views.setImageViewResource(R.id.widget_btn_done, doneImg);

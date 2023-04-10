@@ -106,7 +106,13 @@ public class CreateTasks {
     }
 
     public void setInProgress(boolean inProgress) {
+
         isInProgress = inProgress;
+        if(inProgress) {
+            this.state = "In progress";
+        }else{
+            this.state = "pending";
+        }
     }
 
     public boolean isDone() {
@@ -114,7 +120,11 @@ public class CreateTasks {
     }
 
     public void setDone(boolean done) {
+
         isDone = done;
+        if(done){
+            this.state="complete";
+        }
     }
 
     public boolean isOverdue() {

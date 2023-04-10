@@ -49,7 +49,9 @@
             android:parentActivityName=".Project.IndividualTask"/>
         <activity
             android:name=".Project.IndividualTask"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Project.TaskActivity"
+            />
         <activity
             android:name=".Teams.ManageTeams"
             android:exported="false" />
@@ -67,7 +69,9 @@
         </activity>
         <activity
             android:name=".Project.TaskActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".Project.ProjectActivity"
+            />
         <activity
             android:name=".Project.ProjectActivity"
             android:exported="false" />

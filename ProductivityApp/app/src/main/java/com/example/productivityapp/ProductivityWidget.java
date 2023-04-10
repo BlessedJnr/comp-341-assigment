@@ -189,9 +189,6 @@ public class ProductivityWidget extends AppWidgetProvider {
             int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
             int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
 
-            Toast.makeText(context, "Toggled Done of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
-
-
             boolean taskState = intent.getBooleanExtra("TASK_DONE", false);
             String projectKey = ProjectRemoteViewsFactory.projectKeysMap.get(selectedProject);
             String index = Integer.toString(intent.getIntExtra(EXTRA_TASK, 0));
