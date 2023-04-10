@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.productivityapp.R;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<CreateTasks> mTaskList;
@@ -104,6 +113,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
         holder.itemView.setLayoutParams(layoutParams);
 
+        //when card view is clicked
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,6 +124,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     intent.putExtra("taskName", taskName);
                     intent.putExtra("projectName", projectName);
                     context.startActivity(intent);
+                }
+            }
+        });
+
+        //when checkbox is clicked
+        holder.checkTask.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    updateDatabaseTask(holder.taskName.getText().toString(), true);
+                }
+                else {
+                    updateDatabaseTask(holder.taskName.getText().toString(), false);
                 }
             }
         });
@@ -178,5 +201,56 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public void setTaskState(String taskState) {
             this.taskState = taskState;
         }
+    }
+
+    //update the state of the task
+    private void updateDatabaseTask(String task, boolean isChecked) {
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String encodedEmail = user.getEmail().replace(".", ",");
+        DatabaseReference currentUserProjectRef = FirebaseDatabase.getInstance().getReference("Users").child(encodedEmail).child("Projects");
+        currentUserProjectRef.orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //get index of the task
+                    int index = -1;
+
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(task)) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1) {
+                        //update the last modified
+                        createProject.setLastModified(new Date().getTime());
+                        //update the state
+                        if (isChecked){
+                            createProject.getTasksList().get(index).setState("Complete");
+                        }
+                        else {
+                            createProject.getTasksList().get(index).setState("In Progress");
+                            Intent intent = new Intent(context, TaskActivity.class);
+                            intent.putExtra("projectName", projectName);
+                            context.startActivity(intent);
+                        }
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                    else {
+                        Toast.makeText(context, "Error occurred try later", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
