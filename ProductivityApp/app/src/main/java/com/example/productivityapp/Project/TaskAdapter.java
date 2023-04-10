@@ -1,9 +1,12 @@
 package com.example.productivityapp.Project;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.productivityapp.Notifications.CreateInboxNotifications;
 import com.example.productivityapp.R;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -97,6 +100,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             currentCalendar.add(Calendar.HOUR, 24);
             if (calendar.before(currentCalendar) && !tasks.isNotified()) {
                 addNotification(tasks.getTask(), "due 24 hours");
+                popUpNotification(tasks.getTask(), "due in 24 hours");
                 updateDatabaseNotified(tasks.getTask(), true);
             }
             else if (calendar.after(currentCalendar) && tasks.isNotified()) {
@@ -329,5 +333,29 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                     });
         }
     }
+
+    private void popUpNotification(String taskName, String notificationType) {
+        // Define the notification channel ID and name
+        String channelId = "my_channel_id";
+        String channelName = "My Channel";
+
+        // Create the notification channel
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Set the notification properties
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_stat_alarm)
+                .setContentTitle(taskName)
+                .setContentText("Task " + notificationType)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        // Show the notification
+        notificationManager.notify(0, builder.build());
+    }
+
 
 }
