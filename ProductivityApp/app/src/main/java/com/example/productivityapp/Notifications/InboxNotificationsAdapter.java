@@ -64,7 +64,7 @@ public class InboxNotificationsAdapter extends RecyclerView.Adapter<InboxNotific
             super(itemView);
             messageSubject = itemView.findViewById(R.id.message_subject);
             messageBody = itemView.findViewById(R.id.message_body);
-            messageBody = itemView.findViewById(R.id.message_timestamp);
+            timestamp = itemView.findViewById(R.id.message_timestamp);
         }
     }
 }
