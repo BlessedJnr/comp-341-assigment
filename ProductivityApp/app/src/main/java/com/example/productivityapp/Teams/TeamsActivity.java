@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -129,7 +130,6 @@ public class TeamsActivity extends BottomNavigationActivity {
         });
     }
 
-
     private void createTeamCardList(){
         teamsItems = new ArrayList<>();
     }
@@ -227,5 +227,6 @@ public class TeamsActivity extends BottomNavigationActivity {
     private void createCopyOfProject (CreateProject createProject) {
         collaboratedProjects.child(createProject.getMainOwner()).push().setValue(createProject);
     }
+
 
 }
