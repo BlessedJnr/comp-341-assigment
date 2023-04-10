@@ -217,6 +217,10 @@ public class IndividualTask extends AppCompatActivity {
                     }
                     if (index != -1) {
                         CreateTasks updatedTask = new CreateTasks(projectName, task, desc, date, state);
+
+                        if (createProject.getCollaborated()) {
+                            updateCollaboratedTask(createProject.getMainOwner(), projectName, updatedTask);
+                        }
                         createProject.setLastModified(new Date().getTime());
                         createProject.getTasksList().set(index, updatedTask);
 
@@ -261,4 +265,45 @@ public class IndividualTask extends AppCompatActivity {
         });
     }
 
+    private void updateCollaboratedTask(String mainOwner, String project, CreateTasks tasks) {
+        DatabaseReference collaboratedProjectRef = FirebaseDatabase.getInstance().getReference("Collaborated Teams").child(mainOwner);
+
+        collaboratedProjectRef.orderByChild("projectName").equalTo(project).addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //get index of the task
+                    int index = -1;
+
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                            taskName = tasks.getTask();
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1) {
+                        createProject.setLastModified(new Date().getTime());
+                        createProject.getTasksList().set(index, tasks);
+
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Error occurred try later", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

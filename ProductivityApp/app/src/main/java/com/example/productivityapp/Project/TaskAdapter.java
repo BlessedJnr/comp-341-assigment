@@ -46,8 +46,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private Context context;
     private String projectName;
 
-
-
     public TaskAdapter (List<CreateTasks> tasklist, int margin, TaskActivity activity, String projectName){
         mTaskList = tasklist;
         mMargin = margin;
@@ -314,9 +312,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                                         break;
                                     }
                                 }
-                                if (index != -1) {
+                                if (index != -1 && !createProject.getCollaborated()) {
                                     createProject.getTasksList().get(index).setNotified(notified);
                                     //update the CreateProject object in the database
+                                    DatabaseReference projectRef = dataSnapshot.getRef();
+                                    projectRef.setValue(createProject);
+                                    break;
+                                }
+                                else if (index != -1 && createProject.getCollaborated()) {
+                                    createProject.getTasksList().get(index).setNotified(notified);
+                                    updateDatabaseNotifiedCollaborated(createProject.getMainOwner(), createProject.getProjectName(), taskName, notified);
                                     DatabaseReference projectRef = dataSnapshot.getRef();
                                     projectRef.setValue(createProject);
                                     break;
@@ -356,6 +361,42 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         // Show the notification
         notificationManager.notify(0, builder.build());
     }
+    private void updateDatabaseNotifiedCollaborated(String mainOwner, String project, String taskName, boolean notified) {
+        DatabaseReference collaboratedProjectRef = FirebaseDatabase.getInstance().getReference("Collaborated Teams").child(mainOwner);
 
+        collaboratedProjectRef.orderByChild("projectName").equalTo(project).addListenerForSingleValueEvent(new ValueEventListener() {
 
-}
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                    //get index of the task
+                    int index = -1;
+
+                    for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
+                        if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1) {
+                        createProject.setLastModified(new Date().getTime());
+                        createProject.getTasksList().get(index).setNotified(notified);
+                        //update the CreateProject object in the database
+                        DatabaseReference projectRef = dataSnapshot.getRef();
+                        projectRef.setValue(createProject);
+                        break;
+                    }
+                    else {
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    }
