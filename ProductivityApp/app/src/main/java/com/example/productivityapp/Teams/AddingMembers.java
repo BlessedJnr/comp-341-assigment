@@ -230,7 +230,6 @@ public class AddingMembers extends AppCompatActivity {
         String memberEncodedEmail = email.getText().toString().replace(".", ",");
         DatabaseReference teamRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(memberEncodedEmail).child("Teams");
         teamRef.push().setValue(createTeams);
-
     }
 
 

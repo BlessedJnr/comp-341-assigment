@@ -53,6 +53,7 @@ public class GetTeamMembers extends BottomNavigationActivity {
         setContentView(binding.getRoot());
 
         binding.title.setText(getIntent().getStringExtra("teamName"));
+        binding.projectname.setText(getIntent().getStringExtra("projectName"));
 
 
         //setup the toolbar
@@ -99,7 +100,7 @@ public class GetTeamMembers extends BottomNavigationActivity {
         RecyclerView mRecylerView = binding.recyclerView;
         mRecylerView.setHasFixedSize(true);
         mRecylerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
-        adapter = new ViewMembersAdapter(memberItems, GetTeamMembers.this);
+        adapter = new ViewMembersAdapter(memberItems, GetTeamMembers.this, getIntent().getStringExtra("projectName"));
         mRecylerView.setAdapter(adapter);
     }
 
