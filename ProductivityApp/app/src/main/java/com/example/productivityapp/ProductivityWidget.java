@@ -14,11 +14,22 @@ import android.widget.ListView;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.CreateTasks;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of App Widget functionality.
@@ -33,11 +44,9 @@ public class ProductivityWidget extends AppWidgetProvider {
     public static final String TOGGLE_DONE_ACTION = "com.example.productivityapp.TOGGLE_DONE_ACTION";
 
 
-    public static int selectedProject = -1;
-    public static List<CreateProject> projects;
-    public static List<CreateTasks> tasks1 = new ArrayList<>();
-    public static List<CreateTasks> tasks2 = new ArrayList<>();
-    public static List<CreateTasks> tasks3 = new ArrayList<>();
+    public static String selectedProject = "none";
+
+    static Context context;
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -51,8 +60,7 @@ public class ProductivityWidget extends AppWidgetProvider {
 
         //Onclick intent to change status of task
         Intent toggleStateIntent = new Intent(context, ProductivityWidget.class);
-        toggleStateIntent.setAction(ProductivityWidget.TOGGLE_STATE_ACTION);
-
+//        toggleStateIntent.setAction(ProductivityWidget.TOGGLE_STATE_ACTION);
         toggleStateIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         toggleStateIntent.setData(Uri.parse(toggleStateIntent.toUri(Intent.URI_INTENT_SCHEME)));
 
@@ -60,13 +68,13 @@ public class ProductivityWidget extends AppWidgetProvider {
         views.setPendingIntentTemplate(R.id.widget_lv_tasks, toggleStatePendingIntent);
 
         //Pending intent for toggle done
-        Intent toggleDoneIntent = new Intent(context, ProductivityWidget.class);
-        toggleDoneIntent.setAction(TOGGLE_DONE_ACTION);
-        toggleDoneIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        toggleDoneIntent.setData(Uri.parse(toggleDoneIntent.toUri(Intent.URI_INTENT_SCHEME)));
-
-        PendingIntent toggleDonePendingIntent = PendingIntent.getBroadcast(context, 1, toggleDoneIntent, PendingIntent.FLAG_MUTABLE);
-        views.setOnClickPendingIntent(R.id.widget_btn_done, toggleDonePendingIntent);
+//        Intent toggleDoneIntent = new Intent(context, ProductivityWidget.class);
+//        toggleDoneIntent.setAction(TOGGLE_DONE_ACTION);
+//        toggleDoneIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+//        toggleDoneIntent.setData(Uri.parse(toggleDoneIntent.toUri(Intent.URI_INTENT_SCHEME)));
+//
+//        PendingIntent toggleDonePendingIntent = PendingIntent.getBroadcast(context, 1, toggleDoneIntent, PendingIntent.FLAG_MUTABLE);
+//        views.setOnClickPendingIntent(R.id.widget_lv_tasks, toggleDonePendingIntent);
 
         //Setting onclick to reshow projects
         Intent backIntent = new Intent(context, ProductivityWidget.class);
@@ -85,12 +93,14 @@ public class ProductivityWidget extends AppWidgetProvider {
                 PendingIntent.FLAG_MUTABLE);
         views.setPendingIntentTemplate(R.id.widget_lv_projects, expandPendingIntent);
 
+        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_lv_projects);
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
+        this.context = context;
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -99,31 +109,36 @@ public class ProductivityWidget extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
+
         if(intent.getAction().equals(EXPAND_ACTION)) {
 
             int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
 
-            int viewIndex = intent.getIntExtra(EXTRA_PROJECT, 0);
-            Toast.makeText(context, "Touched Project " + viewIndex, Toast.LENGTH_SHORT).show();
+//            int viewIndex = intent.getIntExtra(EXTRA_PROJECT, 0);
+//            Toast.makeText(context, "Touched Project " + viewIndex, Toast.LENGTH_SHORT).show();
+
+            String projectName = intent.getStringExtra(EXTRA_PROJECT);
 
             //show task list and hide Projects
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.productivity_widget);
             views.setViewVisibility(R.id.widget_lv_projects, View.GONE);
             views.setViewVisibility(R.id.widget_tasks_container, View.VISIBLE);
-            selectedProject = viewIndex;
-            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), ProductivityWidget.class.getName());
-
-
-            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
-            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
-
+            views.setTextViewText(R.id.widget_tv_tasks_projectname, projectName);
+            selectedProject = projectName;
 
             //Rendering the list
             Intent taskIntent = new Intent(context, TaskWidgetService.class);
             taskIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
             taskIntent.setData(Uri.parse(taskIntent.toUri(Intent.URI_INTENT_SCHEME)));
             views.setRemoteAdapter(R.id.widget_lv_tasks, taskIntent);
+
+            ComponentName thisAppWidget = new ComponentName(context.getPackageName(), ProductivityWidget.class.getName());
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
 
             appWidgetManager.updateAppWidget(thisAppWidget, views);
         }
@@ -135,14 +150,37 @@ public class ProductivityWidget extends AppWidgetProvider {
             views.setViewVisibility(R.id.widget_tasks_container, View.GONE);
             ComponentName thisAppWidget = new ComponentName(context.getPackageName(), ProductivityWidget.class.getName());
 
+            selectedProject = "none";
+
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
             appWidgetManager.updateAppWidget(thisAppWidget, views);
         }
 
         if(intent.getAction().equals(TOGGLE_STATE_ACTION)){
-            int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
-            int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
 
-            Toast.makeText(context, "Toggled Status of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
+            boolean taskState = intent.getBooleanExtra("TASK_STATE", false);
+            String projectKey = ProjectRemoteViewsFactory.projectKeysMap.get(selectedProject);
+            String index = Integer.toString(intent.getIntExtra(EXTRA_TASK, 0));
+            String tempProjectHolder = selectedProject;
+
+            selectedProject = "none";
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
+
+            dbRef = dbRef.child(projectKey).child("tasksList").child(index).child("inProgress");
+
+            if(taskState)
+                dbRef.setValue(false);
+            else
+                dbRef.setValue(true);
+
+
+            selectedProject = tempProjectHolder;
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
 
         }
 
@@ -151,7 +189,26 @@ public class ProductivityWidget extends AppWidgetProvider {
             int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
             int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
 
-            Toast.makeText(context, "Toggled Done of Project " + projectIndex + " Task "+ taskIndex, Toast.LENGTH_SHORT).show();
+            boolean taskState = intent.getBooleanExtra("TASK_DONE", false);
+            String projectKey = ProjectRemoteViewsFactory.projectKeysMap.get(selectedProject);
+            String index = Integer.toString(intent.getIntExtra(EXTRA_TASK, 0));
+            String tempProjectHolder = selectedProject;
+
+            selectedProject = "none";
+            int appWidgetIds[] = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
+
+
+            dbRef = dbRef.child(projectKey).child("tasksList").child(index).child("done");
+
+            if(taskState)
+                dbRef.setValue(false);
+            else
+                dbRef.setValue(true);
+
+
+            selectedProject = tempProjectHolder;
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
         }
 
         super.onReceive(context, intent);
@@ -160,33 +217,17 @@ public class ProductivityWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-
-
-        projects = new ArrayList<>();
-        tasks1 = new ArrayList<>();
-        tasks2 = new ArrayList<>();
-        tasks3 = new ArrayList<>();
-
-        projects.add(new CreateProject("Proj 1"));
-        projects.add(new CreateProject("Proj 2"));
-        projects.add(new CreateProject("Proj 3"));
-
-        tasks1.add(new CreateTasks("Proj1","Baking", "Random Descri.", "24-Mar-2023", "complete" ));
-        tasks1.add(new CreateTasks());
-
-        tasks2.add(new CreateTasks());
-        tasks2.add(new CreateTasks());
-        tasks2.add(new CreateTasks());
-
-        tasks3.add(new CreateTasks("Proj3", "Slayin", "Another Desc", "10-Mar-2022","in progress" ));
-
-        projects.get(0).setTasksList((ArrayList<CreateTasks>) tasks1);
-        projects.get(1).setTasksList((ArrayList<CreateTasks>) tasks2);
-        projects.get(2).setTasksList((ArrayList<CreateTasks>) tasks3);
     }
+
 
     @Override
     public void onDisabled(Context context) {
         // Enter relevant functionality for when the last widget is disabled
+    }
+
+    public static void refreshWidget() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_projects);
     }
 }

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     ViewPageAdapter viewPageAdapter;
     boolean isFirstLaunch = true;
     Button notificationButton;
-    private static final String CHANNEL_ID = "com.example.productivityapp.CHANNEL1";
+    public static final String CHANNEL_ID = "com.example.productivityapp.CHANNEL1";
     private static final String GROUP_OVERDUE = "com.example.productivityapp.OVERDUE";
 
     static int counter = 0;
@@ -170,9 +170,11 @@ public class MainActivity extends AppCompatActivity {
     private void setRepeatingNotification() {
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 17);
-        calendar.set(Calendar.MINUTE, 43);
+        calendar.set(Calendar.HOUR_OF_DAY, 05);
+        calendar.set(Calendar.MINUTE, 47);
         calendar.set(Calendar.SECOND, 00);
+
+//        calendar.add(Calendar.SECOND, 5);
 
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -189,5 +191,6 @@ public class MainActivity extends AppCompatActivity {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), alarmBroadcastPendingIntent);
         }
 
+        Log.d("iiv", "notification repeater set");
     }
 }
