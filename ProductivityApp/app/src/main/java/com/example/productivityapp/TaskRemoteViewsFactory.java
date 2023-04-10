@@ -30,7 +30,6 @@ import java.util.List;
 public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     Context context;
-    int projectPosition;
 
     List<CreateTasks> tasks;
     Intent intent;
@@ -42,51 +41,25 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     public TaskRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;
+        this.tasks = new ArrayList<>();
 
+        onDataSetChanged();
     }
 
     @Override
     public void onCreate() {
-
         tasks = new ArrayList<>();
-        database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
     }
 
 
     @Override
     public void onDataSetChanged() {
 
-        Log.d("iiv", "OndatasetStarted");
-
+        tasks = new ArrayList<>();
         tasks.clear();
         if(!ProductivityWidget.selectedProject.equals("none"))
             tasks = ProjectRemoteViewsFactory.projectTasksMap.get(ProductivityWidget.selectedProject);
 
-//        tasks.clear();
-//
-//        if(!ProductivityWidget.selectedProject.equals("none")){
-//            String key = ProjectRemoteViewsFactory.projectKeysMap.get(ProductivityWidget.selectedProject);
-//            dbRef.child(key).child("tasksList").addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                    for(DataSnapshot snap : snapshot.getChildren()){
-//                        CreateTasks task = snap.getValue(CreateTasks.class);
-//                        tasks.add(task);
-//                    }
-//
-//                    Log.d("iiv", "datachange of dbRef called");
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                }
-//            });
-
-//        }
-
-        Log.d("iiv", "ondatasetEnded");
 
     }
 
@@ -97,6 +70,9 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public int getCount() {
+        while(tasks == null) {
+
+        }
         return tasks.size();
     }
 
@@ -116,8 +92,9 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
         //fill intent for state onclick event
         Bundle extras = new Bundle();
-        extras.putInt(ProductivityWidget.EXTRA_PROJECT, projectPosition);
         extras.putInt(ProductivityWidget.EXTRA_TASK, i);
+        extras.putBoolean("TASK_STATE", tasks.get(i).isInProgress());
+        extras.putBoolean("TASK_DONE", tasks.get(i).isInProgress());
         Intent fillIntent = new Intent();
         fillIntent.putExtras(extras);
 

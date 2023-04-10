@@ -30,8 +30,8 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
     DatabaseReference dbRef;
     static Context context;
     List<String> projects;
-    public static Map<String, String> projectKeysMap;
     public static Map<String, List<CreateTasks>> projectTasksMap;
+    public static Map<String, String> projectKeysMap;
     private static int appWidgetId;
 
     public ProjectRemoteViewsFactory(Context context, Intent intent) {
@@ -44,8 +44,8 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
     public void onCreate() {
 
         projects = new ArrayList<>();
-        projectKeysMap = new HashMap<>();
         projectTasksMap = new HashMap<>();
+        projectKeysMap = new HashMap<>();
         database = FirebaseDatabase.getInstance();
         dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
 
@@ -53,8 +53,8 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 projects.clear();
-                projectKeysMap.clear();
                 projectTasksMap.clear();
+                projectKeysMap.clear();
                 refreshWidget();
                 for(DataSnapshot snap : snapshot.getChildren()){
 
@@ -68,7 +68,7 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
                     CreateProject project = snap.getValue(CreateProject.class);
                     projects.add(project.getProjectName());
                     projectTasksMap.put(project.getProjectName(), tasks);
-                    projectKeysMap.put(project.getProjectName(), snap.getKey());
+                    projectKeysMap.put(project.getProjectName(), snap.getKey().toString());
                 }
 
                 refreshWidget();
