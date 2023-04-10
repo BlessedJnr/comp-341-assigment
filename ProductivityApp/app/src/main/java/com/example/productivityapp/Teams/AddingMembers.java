@@ -107,7 +107,6 @@ public class AddingMembers extends AppCompatActivity {
                         Post post = new Post(getUserName(),email.getText().toString());
 
                         addProjectToMember();
-                        Toast.makeText(AddingMembers.this, "" + isOwner, Toast.LENGTH_SHORT).show();
                         if (isOwner) {
                             createTeams.getMembers().add(post);
                             DatabaseReference teamsRef = dataSnapshot.getRef();
