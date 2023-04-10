@@ -14,11 +14,12 @@ public class CreateTasks {
     private String description = "Some sample Description";
     private String state = "Pending";
     private String dueDate = "01-Jan-2022";
-
     private boolean isOverdue = false;
     private boolean isInProgress = false;
     private boolean isDone = false;
     private int daysOverdue = 0;
+    private boolean notified = false;
+
 
     public CreateTasks () {
         this.task = "Create task";
@@ -160,5 +161,11 @@ public class CreateTasks {
         return daysBetween;
     }
 
+    public boolean isNotified() {
+        return notified;
+    }
 
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
 }

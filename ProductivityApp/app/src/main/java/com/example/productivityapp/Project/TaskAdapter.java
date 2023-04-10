@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.productivityapp.Notifications.CreateInboxNotifications;
 import com.example.productivityapp.R;
 import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.card.MaterialCardView;
@@ -86,9 +87,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         //check if overdue
         Calendar currentCalendar = Calendar.getInstance();
 
+        //when overdue
         if (calendar.before(currentCalendar)){
             holder.taskDueDate.setTextColor(Color.parseColor("#bf1919"));
 
+        }
+        else {
+            //for when task is due in 24 hours
+            currentCalendar.add(Calendar.HOUR, 24);
+            if (calendar.before(currentCalendar) && !tasks.isNotified()) {
+                addNotification(tasks.getTask(), "due 24 hours");
+                updateDatabaseNotified(tasks.getTask(), true);
+            }
+            else if (calendar.after(currentCalendar) && tasks.isNotified()) {
+                updateDatabaseNotified(tasks.getTask(), false);
+            }
         }
 
         //check if task is done
@@ -253,4 +266,68 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             }
         });
     }
+
+    private void addNotification (String task, String notification){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String encodedEmail = user.getEmail().replace(".", ",");
+        DatabaseReference currentInboxProjectRef = FirebaseDatabase.getInstance().getReference("Notifications").child(encodedEmail).child("Inboxes");
+
+        currentInboxProjectRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (notification.equals("due 24 hours")){
+                    CreateInboxNotifications inboxNotifications = new CreateInboxNotifications("Task due", task + " is due in 24 hours");
+                    currentInboxProjectRef.push().setValue(inboxNotifications);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    //keep track of notified tasks
+    private void updateDatabaseNotified(String taskName, boolean notified) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String encodedEmail = currentUser.getEmail().replace(".", ",");
+            databaseReference.child("Users").child(encodedEmail).child("Projects")
+                    .orderByChild("projectName").equalTo(projectName).addListenerForSingleValueEvent(new ValueEventListener(){
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
+
+                                //get index of the task
+                                int index = -1;
+
+                                for (int i = 0; i < Objects.requireNonNull(createProject).getTasksList().size(); i++) {
+                                    if (createProject.getTasksList().get(i).getTask().equals(taskName)) {
+                                        index = i;
+                                        break;
+                                    }
+                                }
+                                if (index != -1) {
+                                    createProject.getTasksList().get(index).setNotified(notified);
+                                    //update the CreateProject object in the database
+                                    DatabaseReference projectRef = dataSnapshot.getRef();
+                                    projectRef.setValue(createProject);
+                                    break;
+                                }
+                                else {
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle database error
+                        }
+                    });
+        }
+    }
+
 }

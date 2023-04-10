@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.productivityapp.HomeScreen;
 import com.example.productivityapp.More.MoreActivity;
+import com.example.productivityapp.Notifications.InboxNotifitcations;
 import com.example.productivityapp.Project.ProjectActivity;
 import com.example.productivityapp.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,7 +37,8 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 startActivity(intentProject);
                 break;
             case R.id.notifications:
-                Toast.makeText(this, "Notifications clicked", Toast.LENGTH_SHORT).show();
+                Intent intentNotifications = new Intent(this, InboxNotifitcations.class);
+                startActivity(intentNotifications);
                 break;
             case R.id.more:
                 Intent intentMore = new Intent(this, MoreActivity.class);
