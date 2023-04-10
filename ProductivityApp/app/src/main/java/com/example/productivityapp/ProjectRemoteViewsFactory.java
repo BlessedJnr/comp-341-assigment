@@ -1,6 +1,7 @@
 package com.example.productivityapp;
 
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,20 +9,30 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import androidx.annotation.NonNull;
+
 import com.example.productivityapp.Project.CreateProject;
+import com.example.productivityapp.Project.CreateTasks;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     FirebaseDatabase database;
     DatabaseReference dbRef;
-    Context context;
+    static Context context;
     List<String> projects;
-    private int appWidgetId;
+    public static Map<String, String> projectKeysMap;
+    public static Map<String, List<CreateTasks>> projectTasksMap;
+    private static int appWidgetId;
 
     public ProjectRemoteViewsFactory(Context context, Intent intent) {
         appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -33,15 +44,49 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
     public void onCreate() {
 
         projects = new ArrayList<>();
-//        database = FirebaseDatabase.getInstance();
-//        dbRef = database.getReference("Users").child("test@gmail,com").child("Projects");
+        projectKeysMap = new HashMap<>();
+        projectTasksMap = new HashMap<>();
+        database = FirebaseDatabase.getInstance();
+        dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
 
-        if(ProductivityWidget.projects != null) {
-            for (CreateProject project : ProductivityWidget.projects) {
-                projects.add(project.getProjectName());
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                projects.clear();
+                projectKeysMap.clear();
+                projectTasksMap.clear();
+                refreshWidget();
+                for(DataSnapshot snap : snapshot.getChildren()){
+
+                    //get project tasks
+                    List<CreateTasks> tasks = new ArrayList<>();
+                    for(DataSnapshot taskSnap : snap.child("tasksList").getChildren()){
+                        CreateTasks task = taskSnap.getValue(CreateTasks.class);
+                        tasks.add(task);
+                    }
+
+                    CreateProject project = snap.getValue(CreateProject.class);
+                    projects.add(project.getProjectName());
+                    projectTasksMap.put(project.getProjectName(), tasks);
+                    projectKeysMap.put(project.getProjectName(), snap.getKey());
+                }
+
+                refreshWidget();
             }
-        }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    public static void refreshWidget() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, ProductivityWidget.class));
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_projects);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
     }
 
     @Override
@@ -61,11 +106,12 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
 
     @Override
     public RemoteViews getViewAt(int i) {
+
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.project_item);
         views.setTextViewText(R.id.widget_tv_project, projects.get(i));
 
         Bundle extras = new Bundle();
-        extras.putInt(ProductivityWidget.EXTRA_PROJECT, i);
+        extras.putString(ProductivityWidget.EXTRA_PROJECT, projects.get(i));
         Intent fillIntent = new Intent();
         fillIntent.putExtras(extras);
 

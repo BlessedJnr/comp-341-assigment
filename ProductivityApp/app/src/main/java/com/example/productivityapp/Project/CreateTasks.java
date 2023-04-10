@@ -161,4 +161,11 @@ public class CreateTasks {
     }
 
 
+    public void setOverdue(boolean overdue) {
+        isOverdue = overdue;
+    }
+
+    public void setDaysOverdue(int daysOverdue) {
+        this.daysOverdue = daysOverdue;
+    }
 }
