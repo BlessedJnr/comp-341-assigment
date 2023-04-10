@@ -34,12 +34,12 @@
                 />
             <ImageView
                 android:id="@+id/delete_member"
-                android:layout_width="40dp"
+                android:layout_width="80dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_alignRight="@+id/member_card_title"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="10dp"
                 android:src="@drawable/trash_2"
 
                 />

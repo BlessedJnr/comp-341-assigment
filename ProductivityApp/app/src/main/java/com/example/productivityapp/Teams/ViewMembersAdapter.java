@@ -29,6 +29,7 @@ public class ViewMembersAdapter extends RecyclerView.Adapter<ViewMembersAdapter.
     private List<Post> memberList;
     private Context context;
     private String projectName;
+    boolean isOwner = false;
 
     public ViewMembersAdapter(List<Post> memberList, GetTeamMembers activity, String project) {
         this.memberList = memberList;
@@ -38,6 +39,14 @@ public class ViewMembersAdapter extends RecyclerView.Adapter<ViewMembersAdapter.
 
     public void setMemberList(ArrayList<Post> memberList1) {
         this.memberList = memberList1;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
+
+    public void setOwner(boolean owner) {
+        isOwner = owner;
     }
 
     @NonNull
@@ -66,6 +75,9 @@ public class ViewMembersAdapter extends RecyclerView.Adapter<ViewMembersAdapter.
             @Override
             public void onClick(View v) {
                 deleteProjectFromMember(memberList1.getEmail().replace(".", ","), projectName);
+                if (isOwner){
+                    deleteProject(memberList1.getEmail().replace(".", ","), projectName);
+                }
             }
         });
     }
@@ -121,8 +133,7 @@ public class ViewMembersAdapter extends RecyclerView.Adapter<ViewMembersAdapter.
                         CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
 
                         if (createProject.getMainOwner().equals(encodedEmail)) {
-                            Toast.makeText(context, "I ran", Toast.LENGTH_SHORT).show();
-                            deleteProject(memberEncodedEmail, projectName);
+                            setOwner(true);
                             break;
                         } else {
                             Toast.makeText(context, "You don't own this team", Toast.LENGTH_SHORT).show();
