@@ -127,10 +127,11 @@ public class CreateTasks {
         isDone = done;
         if(done){
             this.state="Complete";
-            this.isInProgress = false;
-        }else {
-            this.state = "Pending";
+//            this.isInProgress = false;
         }
+//        else {
+//            this.state = "Pending";
+//        }
     }
 
     public boolean isOverdue() {
