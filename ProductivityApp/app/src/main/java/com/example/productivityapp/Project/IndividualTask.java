@@ -1,6 +1,7 @@
 package com.example.productivityapp.Project;
 
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.productivityapp.NotificationHelper;
+import com.example.productivityapp.NotificationReceiver;
 import com.example.productivityapp.R;
 import com.example.productivityapp.databinding.ActivityIndividualTaskBinding;
 import com.google.android.material.textfield.TextInputEditText;
@@ -22,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -131,6 +137,32 @@ public class IndividualTask extends AppCompatActivity {
                 state = binding.autoCompleteTextView.getHint().toString();
             }
             updateDatabaseTask(updatedTask, updatedDescription, updatedDate, state);
+
+            //sending notification
+
+            Calendar today = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+            Date date = null;
+            try {
+                date = dateFormat.parse(updatedDate);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            Calendar dueDate = Calendar.getInstance();
+            dueDate.setTime(date);
+
+            int daysBetween = 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                daysBetween = (int) ChronoUnit.DAYS.between(dueDate.toInstant(), today.toInstant());
+            }
+
+            if(daysBetween == 0) {
+
+                NotificationHelper notification = new NotificationHelper(getApplicationContext(),"Task Due Today",
+                        taskName + " from Project: " + projectName + "due within 24 Hrs",0,projectName, taskName );
+                notification.makeNotification();
+            }
+
             openTaskActivity();
         });
     }
