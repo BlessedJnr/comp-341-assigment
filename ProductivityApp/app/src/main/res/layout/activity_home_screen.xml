@@ -56,6 +56,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignBottom="@id/recyclerView"/>
             </RelativeLayout>
+
         </androidx.core.widget.NestedScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

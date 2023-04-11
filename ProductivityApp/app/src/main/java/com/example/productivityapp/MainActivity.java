@@ -30,6 +30,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.productivityapp.Login.Login;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -58,12 +61,21 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChanel();
         setRepeatingNotification();
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user != null) {
+            Intent i = new Intent(MainActivity.this, HomeScreen.class);
+            startActivity(i);
+            finish();
+        }
+
         getStarted = findViewById(R.id.getStarted);
         getStarted.setVisibility(View.GONE);
         // next = findViewById(R.id.next);
         skip = findViewById(R.id.skip);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         isFirstLaunch = ((SharedPreferences) sharedPreferences).getBoolean("isFirstLaunch", true);
+
+
         if (isFirstLaunch) {
             // Show your pop-up here
             // ...
@@ -79,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent i = new Intent(MainActivity.this, HomeScreen.class);
+                Intent i = new Intent(MainActivity.this, Login.class);
                 startActivity(i);
                 finish();
             }
@@ -89,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, HomeScreen.class);
+                Intent i = new Intent(MainActivity.this, Login.class);
                 startActivity(i);
                 finish();
             }
