@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.CreateTasks;
+import com.example.productivityapp.Project.ProjectActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -58,6 +59,10 @@ public class ProductivityWidget extends AppWidgetProvider {
         projectIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         projectIntent.setData(Uri.parse(projectIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.widget_lv_projects, projectIntent);
+
+        Intent newProjectIntent = new Intent(context, ProjectActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,0,newProjectIntent, PendingIntent.FLAG_MUTABLE);
+        views.setOnClickPendingIntent(R.id.widget_btn_new, pendingIntent);
 
         //Onclick intent to change status of task
         Intent toggleStateIntent = new Intent(context, ProductivityWidget.class);

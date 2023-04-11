@@ -18,6 +18,7 @@
         />
 
     <ImageButton
+        android:id="@+id/widget_btn_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_add_circle_24"
