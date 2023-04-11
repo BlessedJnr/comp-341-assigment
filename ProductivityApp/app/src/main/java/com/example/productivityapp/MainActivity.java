@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
     TextView[] dots;
     ViewPageAdapter viewPageAdapter;
     boolean isFirstLaunch = true;
-
-
-
     Button notificationButton;
     public static final String CHANNEL_ID = "com.example.productivityapp.CHANNEL1";
     private static final String GROUP_OVERDUE = "com.example.productivityapp.OVERDUE";

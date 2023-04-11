@@ -11,18 +11,19 @@ public class CreateTasks {
 
     private String project = "project name";
     private String task = "Create task";
-    private String description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+    private String description = "Some sample Description";
     private String state = "Pending";
     private String dueDate = "01-Jan-2022";
-
     private boolean isOverdue = false;
     private boolean isInProgress = false;
     private boolean isDone = false;
     private int daysOverdue = 0;
+    private boolean notified = false;
+
 
     public CreateTasks () {
         this.task = "Create task";
-        this.description = "Tasks are used to break down a project into actional pieces. \\n \\n &#8226; Set dues dates to make task active.";
+        this.description = "Some sample Description";
         this.state = "Pending";
         this.dueDate = "01-Jan-2022";
         setOverdue();
@@ -170,7 +171,13 @@ public class CreateTasks {
         return daysBetween;
     }
 
+    public boolean isNotified() {
+        return notified;
+    }
 
+    public void setNotified(boolean notified) {
+        this.notified = notified;
+    }
     public void setOverdue(boolean overdue) {
         isOverdue = overdue;
     }

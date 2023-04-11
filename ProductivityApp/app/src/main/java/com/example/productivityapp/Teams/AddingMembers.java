@@ -34,6 +34,9 @@ public class AddingMembers extends AppCompatActivity {
     ActivityAddingMembersBinding binding;
     private ArrayList<String> projectList = new ArrayList<>();
     private boolean userAlreadyExists = false;
+    private boolean isOwner = true;
+    private String userName = "";
+    String encodedEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class AddingMembers extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
         //get the user email
         String userEmail = user.getEmail();
-        String encodedEmail = userEmail.replace(".", ",");
+        encodedEmail = userEmail.replace(".", ",");
 
         //get references to the databases
         teamMemberRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(encodedEmail).child("Teams");
@@ -69,6 +72,14 @@ public class AddingMembers extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     private void addMembers() {
@@ -93,17 +104,18 @@ public class AddingMembers extends AppCompatActivity {
                     }
 
                     if (index == -1 && userAlreadyExists){
-                        Post post = new Post(email.getText().toString());
-                        createTeams.getMembers().add(post);
-                        DatabaseReference teamsRef = dataSnapshot.getRef();
-                        teamsRef.setValue(createTeams);
-                        addProjectToMember();
-                        //Toast.makeText(AddingMembers.this, "Added", Toast.LENGTH_SHORT).show();
-                    }
+                        Post post = new Post(getUserName(),email.getText().toString());
 
+                        addProjectToMember();
+                        if (isOwner) {
+                            createTeams.getMembers().add(post);
+                            DatabaseReference teamsRef = dataSnapshot.getRef();
+                            teamsRef.setValue(createTeams);
+                            addTeamToMember(createTeams);
+                        }
+                    }
                     else {
                         Toast.makeText(AddingMembers.this, "User does not exist", Toast.LENGTH_SHORT).show();
-
                     }
 
                 }
@@ -148,6 +160,7 @@ public class AddingMembers extends AppCompatActivity {
                     CreateUser createUser = dataSnapshot.getValue(CreateUser.class);
 
                     if (createUser.getEmail().equals(email.getText().toString())) {
+                        setUserName(createUser.getName());
                         userAlreadyExists = true;
                         addMembers(); // call addMembers() only after userExists() is complete
                         return;
@@ -167,6 +180,13 @@ public class AddingMembers extends AppCompatActivity {
         intent.putExtra("teamName", getIntent().getStringExtra("teamName"));
         startActivity(intent);
     }
+    public void setOwner(boolean owner) {
+        isOwner = owner;
+    }
+    public boolean isOwner() {
+        return isOwner;
+    }
+
     private void addProjectToMember () {
         //query for existing projects with the same name
         currentProjectRef.orderByChild("projectName").equalTo(getIntent().getStringExtra("projectName")).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -177,13 +197,20 @@ public class AddingMembers extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                         CreateProject createProject = dataSnapshot.getValue(CreateProject.class);
 
-                        //remove the . in the member's email
-                        String memberEncodedEmail = email.getText().toString().replace(".", ",");
-                        Toast.makeText(AddingMembers.this, memberEncodedEmail, Toast.LENGTH_SHORT).show();
-                        //add the collaborated project to the members projects
-                        DatabaseReference memberRef = FirebaseDatabase.getInstance().getReference("Users").child(memberEncodedEmail).child("Projects");
-                        memberRef.push().setValue(createProject);
-                        break;
+                        if (createProject.getMainOwner().equals(encodedEmail)){
+                            //remove the . in the member's email
+                            String memberEncodedEmail = email.getText().toString().replace(".", ",");
+                            //add the collaborated project to the members projects
+                            DatabaseReference memberRef = FirebaseDatabase.getInstance().getReference("Users").child(memberEncodedEmail).child("Projects");
+                            memberRef.push().setValue(createProject);
+                            break;
+                        }
+                        else {
+                            Toast.makeText(AddingMembers.this, "You don't own this team", Toast.LENGTH_SHORT).show();
+                            setOwner(false);
+                        }
+
+
                     }
                 } else {
                     //no project with the same name exists
@@ -196,6 +223,12 @@ public class AddingMembers extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void addTeamToMember (CreateTeams createTeams) {
+        String memberEncodedEmail = email.getText().toString().replace(".", ",");
+        DatabaseReference teamRef = FirebaseDatabase.getInstance().getReference().child("All Teams").child(memberEncodedEmail).child("Teams");
+        teamRef.push().setValue(createTeams);
     }
 
 

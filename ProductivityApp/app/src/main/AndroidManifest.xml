@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
@@ -13,7 +11,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:label="Let&apos;s Do It"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
@@ -34,19 +32,28 @@
             />
 
         <activity
+            android:name=".Login.ForgotPassword"
+            android:exported="false" />
+        <activity
+            android:name=".Notifications.InboxNotifitcations"
+            android:exported="false" />
+        <activity
+            android:name=".Project.EditProjectName"
+            android:exported="false" />
+        <activity
             android:name=".Teams.GetTeamMembers"
             android:exported="false" />
         <activity
             android:name=".Teams.TeamsActivity"
             android:exported="false"
-            android:parentActivityName=".More.MoreActivity"/>
+            android:parentActivityName=".More.MoreActivity" />
         <activity
             android:name=".Login.Signup"
             android:exported="false" />
         <activity
             android:name=".Project.EditDescriptionActivity"
             android:exported="false"
-            android:parentActivityName=".Project.IndividualTask"/>
+            android:parentActivityName=".Project.IndividualTask" />
         <activity
             android:name=".Project.IndividualTask"
             android:exported="false"
@@ -81,8 +88,7 @@
         <activity
             android:name=".Teams.AddingMembers"
             android:exported="false"
-            android:parentActivityName=".Teams.TeamsActivity"/>
-
+            android:parentActivityName=".Teams.TeamsActivity" />
 
         <receiver
             android:name=".ProductivityWidget"
@@ -113,15 +119,14 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver android:name=".NotificationReceiver"
+        <receiver
+            android:name=".NotificationReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.productivityapp.DISPLAY_NOTIFICATION"/>
+                <action android:name="com.example.productivityapp.DISPLAY_NOTIFICATION" />
             </intent-filter>
         </receiver>
-
-
     </application>
 
 </manifest>

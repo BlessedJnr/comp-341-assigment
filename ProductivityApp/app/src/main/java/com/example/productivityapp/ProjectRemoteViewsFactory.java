@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.CreateTasks;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,7 +48,8 @@ public class ProjectRemoteViewsFactory implements RemoteViewsService.RemoteViews
         projectTasksMap = new HashMap<>();
         projectKeysMap = new HashMap<>();
         database = FirebaseDatabase.getInstance();
-        dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",");
+        dbRef = database.getReference("Users").child(email).child("Projects");
 
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override

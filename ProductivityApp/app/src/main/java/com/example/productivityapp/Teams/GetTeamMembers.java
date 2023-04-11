@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -53,6 +54,7 @@ public class GetTeamMembers extends BottomNavigationActivity {
         setContentView(binding.getRoot());
 
         binding.title.setText(getIntent().getStringExtra("teamName"));
+        binding.projectname.setText(getIntent().getStringExtra("projectName"));
 
 
         //setup the toolbar
@@ -91,6 +93,28 @@ public class GetTeamMembers extends BottomNavigationActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.team_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.teamDelete:
+                deleteTeam();
+                openTeamActivity();
+                return true;
+            case R.id.teamExit:
+                openTeamActivity();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
     private void createMemberCardList () {
         memberItems = new ArrayList<>();
     }
@@ -99,7 +123,7 @@ public class GetTeamMembers extends BottomNavigationActivity {
         RecyclerView mRecylerView = binding.recyclerView;
         mRecylerView.setHasFixedSize(true);
         mRecylerView.setLayoutManager(new GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false));
-        adapter = new ViewMembersAdapter(memberItems, GetTeamMembers.this);
+        adapter = new ViewMembersAdapter(memberItems, GetTeamMembers.this, getIntent().getStringExtra("projectName"));
         mRecylerView.setAdapter(adapter);
     }
 
@@ -121,6 +145,28 @@ public class GetTeamMembers extends BottomNavigationActivity {
                 Toast.makeText(GetTeamMembers.this, "Failed to retrieve", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void deleteTeam () {
+        teamMemberRef.orderByChild("teamName").equalTo(getIntent().getStringExtra("teamName")).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    dataSnapshot.getRef().removeValue();
+                    return;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(GetTeamMembers.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void openTeamActivity(){
+        Intent intent = new Intent(GetTeamMembers.this, TeamsActivity.class);
+        startActivity(intent);
     }
 
 }

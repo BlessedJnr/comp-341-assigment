@@ -19,15 +19,33 @@
         style="@style/CardView.Light"
         >
 
-        <TextView
-            android:id="@+id/member_card_title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Member Name"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="20dp"
-            />
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:id="@+id/member_card_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Member Name"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                />
+            <ImageView
+                android:id="@+id/delete_member"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/member_card_title"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/trash_2"
+
+                />
+        </RelativeLayout>
+
+
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

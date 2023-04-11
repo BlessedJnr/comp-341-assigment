@@ -85,6 +85,16 @@ public class TaskActivity extends BottomNavigationActivity {
 
         retrieveTasks();
 
+        //handle project name click
+        projectNameTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(TaskActivity.this, EditProjectName.class);
+                intent.putExtra("projectName", projectName);
+                startActivity(intent);
+            }
+        });
+
         //handle bottom navigation clicks
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setSelectedItemId(R.id.Projects); // Set the selected item
@@ -161,7 +171,6 @@ public class TaskActivity extends BottomNavigationActivity {
 
         switch (id) {
             case R.id.project_delete:
-                Toast.makeText(getApplicationContext(), "Delete clicked", Toast.LENGTH_SHORT).show();
                 deleteProject();
                 openProjectsActivity();
                 return true;
