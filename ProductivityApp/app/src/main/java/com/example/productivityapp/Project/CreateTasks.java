@@ -48,8 +48,10 @@ public class CreateTasks {
 
         if(state.equalsIgnoreCase("In Progress")){
             this.isInProgress = true;
+            this.isDone = false;
         }
         if(state.equalsIgnoreCase("Complete")){
+            this.isInProgress = false;
             this.isDone = true;
         }
     }
@@ -112,7 +114,7 @@ public class CreateTasks {
         if(inProgress) {
             this.state = "In progress";
         }else{
-            this.state = "pending";
+            this.state = "Pending";
         }
     }
 
@@ -124,7 +126,10 @@ public class CreateTasks {
 
         isDone = done;
         if(done){
-            this.state="complete";
+            this.state="Complete";
+            this.isInProgress = false;
+        }else {
+            this.state = "Pending";
         }
     }
 
