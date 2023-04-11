@@ -34,10 +34,6 @@ public class TaskRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
     List<CreateTasks> tasks;
     Intent intent;
     int widgetId;
-    FirebaseDatabase database;
-    DatabaseReference dbRef;
-
-
 
     public TaskRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;

@@ -16,6 +16,7 @@ import androidx.core.app.TaskStackBuilder;
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.CreateTasks;
 import com.example.productivityapp.Project.TaskActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,9 +30,9 @@ import java.util.Map;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
-    static String user = "omonrizu@vmail,com";
+    static String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",");
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    static DatabaseReference dbRef = database.getReference("Users").child(user).child("Projects");
+    static DatabaseReference dbRef = database.getReference("Users").child(email).child("Projects");
 
     private List<CreateTasks> overdueTasks = new ArrayList<>();
 

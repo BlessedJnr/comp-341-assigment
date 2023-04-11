@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import com.example.productivityapp.Project.CreateProject;
 import com.example.productivityapp.Project.CreateTasks;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -110,7 +111,8 @@ public class ProductivityWidget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference("Users").child("omonrizu@vmail,com").child("Projects");
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail().replace(".", ",");
+        DatabaseReference dbRef = database.getReference("Users").child(email).child("Projects");
 
         if(intent.getAction().equals(EXPAND_ACTION)) {
 
