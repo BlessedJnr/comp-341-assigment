@@ -162,7 +162,7 @@ public class ProductivityWidget extends AppWidgetProvider {
 
         if(intent.getAction().equals(TOGGLE_STATE_ACTION)){
 
-            boolean taskState = intent.getBooleanExtra("TASK_STATE", false);
+            boolean taskInProgress = intent.getBooleanExtra("TASK_STATE", false);
             String projectKey = ProjectRemoteViewsFactory.projectKeysMap.get(selectedProject);
             String index = Integer.toString(intent.getIntExtra(EXTRA_TASK, 0));
             String tempProjectHolder = selectedProject;
@@ -172,13 +172,17 @@ public class ProductivityWidget extends AppWidgetProvider {
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
 
 
-            dbRef = dbRef.child(projectKey).child("tasksList").child(index).child("inProgress");
+            dbRef = dbRef.child(projectKey).child("tasksList").child(index);
 
-            if(taskState)
-                dbRef.setValue(false);
-            else
-                dbRef.setValue(true);
-
+            if(taskInProgress){
+                dbRef.child("state").setValue("Pending");
+                dbRef.child("inProgress").setValue(false);
+            }
+            else{
+                dbRef.child("done").setValue(false);
+                dbRef.child("state").setValue("In Progress");
+                dbRef.child("inProgress").setValue(true);
+            }
 
             selectedProject = tempProjectHolder;
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
@@ -191,7 +195,7 @@ public class ProductivityWidget extends AppWidgetProvider {
             int projectIndex = intent.getIntExtra(EXTRA_PROJECT, -1);
             int taskIndex = intent.getIntExtra(EXTRA_TASK, -1);
 
-            boolean taskState = intent.getBooleanExtra("TASK_DONE", false);
+            boolean taskDone = intent.getBooleanExtra("TASK_DONE", false);
             String projectKey = ProjectRemoteViewsFactory.projectKeysMap.get(selectedProject);
             String index = Integer.toString(intent.getIntExtra(EXTRA_TASK, 0));
             String tempProjectHolder = selectedProject;
@@ -201,12 +205,18 @@ public class ProductivityWidget extends AppWidgetProvider {
             appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_lv_tasks);
 
 
-            dbRef = dbRef.child(projectKey).child("tasksList").child(index).child("done");
+            dbRef = dbRef.child(projectKey).child("tasksList").child(index);
 
-            if(taskState)
-                dbRef.setValue(false);
-            else
-                dbRef.setValue(true);
+            if(taskDone){
+                dbRef.child("state").setValue("Pending");
+                dbRef.child("done").setValue(false);
+                dbRef.child("inProgress").setValue(false);
+            }
+            else{
+                dbRef.child("state").setValue("Complete");
+                dbRef.child("done").setValue(true);
+                dbRef.child("inProgress").setValue(false);
+            }
 
 
             selectedProject = tempProjectHolder;
